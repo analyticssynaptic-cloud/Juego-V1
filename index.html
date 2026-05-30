@@ -204,14 +204,18 @@
   .anim-float { animation: float 4s infinite ease-in-out; }
   .anim-slide-up { animation: slideUp .4s ease-out; }
 
-  /* Hotspots interactivos */
+  /* Hotspots interactivos - z-index ALTO para quedar encima del SVG */
   .hotspot {
     position: absolute;
-    width: 38px; height: 38px;
+    width: 42px; height: 42px;
     border-radius: 50%;
     cursor: pointer;
-    z-index: 5;
+    z-index: 50;
     transition: transform .2s ease;
+    background: transparent;
+    border: none;
+    padding: 0;
+    pointer-events: auto !important;
   }
   .hotspot .ring {
     position: absolute;
@@ -219,25 +223,85 @@
     border-radius: 50%;
     border: 2px solid var(--acc-amber);
     animation: pulseRing 2.2s infinite ease-out;
+    pointer-events: none;
   }
   .hotspot .ring.delay { animation-delay: 1.1s; }
   .hotspot .core {
     position: absolute;
-    inset: 9px;
+    inset: 10px;
     border-radius: 50%;
-    background: var(--acc-amber);
+    background: linear-gradient(135deg, #FBBF24, #F59E0B);
     color: var(--bg-deep);
     display: flex; align-items: center; justify-content: center;
     font-weight: 800;
     font-size: 13px;
-    box-shadow: 0 0 18px rgba(245, 158, 11, 0.7);
+    box-shadow: 0 0 18px rgba(245, 158, 11, 0.8), inset 0 -2px 4px rgba(0,0,0,0.25);
     font-family: 'JetBrains Mono', monospace;
+    pointer-events: none;
+    border: 1.5px solid #FCD34D;
   }
-  .hotspot:hover { transform: scale(1.15); }
-  .hotspot.done .core   { background: var(--acc-green); color: white; box-shadow: 0 0 18px rgba(16, 185, 129, 0.6); }
+  .hotspot:hover { transform: scale(1.18); z-index: 60; }
+  .hotspot:hover .core { box-shadow: 0 0 26px rgba(245, 158, 11, 1), inset 0 -2px 4px rgba(0,0,0,0.25); }
+  .hotspot:hover .hs-tooltip { opacity: 1; transform: translateX(-50%) translateY(-4px); }
+  .hotspot:active { transform: scale(0.92); }
+
+  .hotspot.done .core   { background: linear-gradient(135deg, #34D399, #059669); color: white; box-shadow: 0 0 18px rgba(16, 185, 129, 0.7); border-color: #6EE7B7; }
   .hotspot.done .ring   { display: none; }
-  .hotspot.failed .core { background: var(--acc-red); color: white; box-shadow: 0 0 18px rgba(239, 68, 68, 0.6); }
+  .hotspot.failed .core { background: linear-gradient(135deg, #F87171, #DC2626); color: white; box-shadow: 0 0 18px rgba(239, 68, 68, 0.7); border-color: #FCA5A5; }
   .hotspot.failed .ring { display: none; }
+
+  /* Tooltip sobre cada hotspot */
+  .hs-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+    background: rgba(4, 6, 11, 0.96);
+    border: 1px solid var(--acc-cyan);
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 5px 9px;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity .2s, transform .2s;
+    pointer-events: none;
+    margin-bottom: 6px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+  }
+  .hs-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--acc-cyan);
+  }
+
+  /* Animacion shake al equivocarse */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+  .anim-shake { animation: shake .4s ease; }
+
+  /* Confeti al acertar */
+  @keyframes confettiPop {
+    0%   { opacity: 1; transform: translate(-50%, -50%) scale(0) rotate(0); }
+    50%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(1) rotate(var(--rot)); }
+  }
+  .confetti-piece {
+    position: absolute;
+    width: 8px; height: 8px;
+    pointer-events: none;
+    animation: confettiPop .9s ease-out forwards;
+  }
 
   /* Scrollbar custom */
   .scroll-thin::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -835,138 +899,257 @@
                style="background: linear-gradient(180deg, rgba(34, 211, 238, 0.15), transparent); animation: scanLine 4s linear infinite;">
           </div>
 
-          <!-- SVG del vehiculo -->
-          <svg viewBox="0 0 800 480" class="w-full h-full block relative z-10" preserveAspectRatio="xMidYMid meet" style="max-height: 480px;">
+          <!-- SVG del vehiculo - z-index BAJO para que los hotspots queden encima -->
+          <svg viewBox="0 0 800 480" class="w-full h-full block relative" style="max-height: 480px; z-index: 1; pointer-events: none;" preserveAspectRatio="xMidYMid meet">
 
             <defs>
               <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#2D7FF9" stop-opacity="0.55"/>
-                <stop offset="60%" stop-color="#0066CC" stop-opacity="0.85"/>
-                <stop offset="100%" stop-color="#0F2742" stop-opacity="1"/>
+                <stop offset="0%"  stop-color="#3B82F6" stop-opacity="0.9"/>
+                <stop offset="55%" stop-color="#1D4ED8" stop-opacity="1"/>
+                <stop offset="100%" stop-color="#0C1F3F" stop-opacity="1"/>
+              </linearGradient>
+              <linearGradient id="bodyShine" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#93C5FD" stop-opacity="0.55"/>
+                <stop offset="100%" stop-color="#3B82F6" stop-opacity="0"/>
               </linearGradient>
               <linearGradient id="glassGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#22D3EE" stop-opacity="0.45"/>
-                <stop offset="100%" stop-color="#0066CC" stop-opacity="0.25"/>
+                <stop offset="0%"  stop-color="#67E8F9" stop-opacity="0.7"/>
+                <stop offset="55%" stop-color="#0891B2" stop-opacity="0.55"/>
+                <stop offset="100%" stop-color="#082F49" stop-opacity="0.7"/>
+              </linearGradient>
+              <linearGradient id="glassReflect" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.35"/>
+                <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0"/>
               </linearGradient>
               <radialGradient id="headLight" cx="0.5" cy="0.5" r="0.5">
-                <stop offset="0%" stop-color="#FEF3C7" stop-opacity="1"/>
+                <stop offset="0%"  stop-color="#FFFBEB" stop-opacity="1"/>
+                <stop offset="60%" stop-color="#FCD34D" stop-opacity="0.7"/>
                 <stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/>
               </radialGradient>
+              <radialGradient id="tailLight" cx="0.5" cy="0.5" r="0.5">
+                <stop offset="0%"  stop-color="#FCA5A5" stop-opacity="1"/>
+                <stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.7"/>
+              </radialGradient>
+              <radialGradient id="wheelGrad" cx="0.5" cy="0.5" r="0.55">
+                <stop offset="0%"  stop-color="#374151" stop-opacity="1"/>
+                <stop offset="70%" stop-color="#111827" stop-opacity="1"/>
+                <stop offset="100%" stop-color="#000000" stop-opacity="1"/>
+              </radialGradient>
               <linearGradient id="floorGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#1F2937" stop-opacity="0.45"/>
+                <stop offset="0%" stop-color="#1F2937" stop-opacity="0.55"/>
                 <stop offset="100%" stop-color="#0A1220" stop-opacity="0"/>
               </linearGradient>
-              <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="6" result="blur"/>
+              <linearGradient id="rimGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%"  stop-color="#E5E7EB" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#6B7280" stop-opacity="0.7"/>
+              </linearGradient>
+              <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
                 <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
               </filter>
             </defs>
 
-            <!-- Sombra/piso -->
-            <ellipse cx="400" cy="395" rx="290" ry="14" fill="url(#floorGrad)"/>
-
-            <!-- Lineas de blueprint laterales -->
-            <g stroke="#22D3EE" stroke-opacity="0.18" stroke-width="0.7" stroke-dasharray="4 4">
+            <!-- Lineas blueprint de fondo -->
+            <g stroke="#22D3EE" stroke-opacity="0.14" stroke-width="0.7" stroke-dasharray="4 4">
               <line x1="40"  y1="200" x2="760" y2="200"/>
               <line x1="40"  y1="320" x2="760" y2="320"/>
-              <line x1="120" y1="60"  x2="120" y2="440"/>
-              <line x1="680" y1="60"  x2="680" y2="440"/>
+              <line x1="120" y1="50"  x2="120" y2="440"/>
+              <line x1="680" y1="50"  x2="680" y2="440"/>
             </g>
 
-            <!-- Etiquetas blueprint -->
-            <text x="44" y="58" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.55">VEH-01 // RUTA SEGURA</text>
-            <text x="44" y="430" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.55">PESV · RES 40595 · 2022</text>
-            <text x="660" y="58" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.55">CHECKLIST 10/10</text>
+            <!-- Etiquetas tecnicas -->
+            <text x="44" y="56" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.55">VEH-01 · RUTA SEGURA</text>
+            <text x="44" y="438" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.55">PESV · RES 40595 · 2022</text>
+            <text x="640" y="56" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.55">CHECKLIST 10/10</text>
+            <text x="640" y="438" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.55">PAR SERVICIOS</text>
 
-            <!-- ========== CHASIS DEL VEHICULO ========== -->
-            <!-- Cuerpo principal (vista lateral 3/4) -->
+            <!-- Sombra bajo el carro -->
+            <ellipse cx="410" cy="412" rx="310" ry="16" fill="url(#floorGrad)"/>
+
+            <!-- ============ CHASIS PRINCIPAL ============ -->
+            <!-- Cuerpo inferior (parte baja del carro) -->
             <path d="
-              M 130 320
-              L 165 220
-              Q 170 200 195 200
-              L 290 200
-              L 340 145
-              Q 350 135 365 135
-              L 525 135
-              Q 545 135 555 150
-              L 600 200
-              L 650 200
-              Q 680 200 690 220
-              L 710 320
-              L 690 350
-              L 130 350
-              Z" fill="url(#bodyGrad)" stroke="#22D3EE" stroke-width="2" stroke-opacity="0.6"/>
+              M 110 340
+              L 130 280
+              Q 135 270 150 268
+              L 240 268
+              L 270 200
+              Q 280 178 305 175
+              L 510 175
+              Q 540 178 558 200
+              L 605 268
+              L 680 268
+              Q 700 270 707 280
+              L 725 340
+              L 700 365
+              L 130 365
+              Z" fill="url(#bodyGrad)" stroke="#0EA5E9" stroke-width="1.8" stroke-opacity="0.7"/>
 
-            <!-- Ventanas -->
-            <path d="M 200 200 L 250 200 L 295 150 L 250 150 Z" fill="url(#glassGrad)" stroke="#22D3EE" stroke-width="1" stroke-opacity="0.4"/>
-            <path d="M 305 145 L 390 145 L 390 200 L 295 200 Z" fill="url(#glassGrad)" stroke="#22D3EE" stroke-width="1" stroke-opacity="0.4"/>
-            <path d="M 400 145 L 525 145 L 555 200 L 400 200 Z" fill="url(#glassGrad)" stroke="#22D3EE" stroke-width="1" stroke-opacity="0.4"/>
+            <!-- Brillo superior cuerpo -->
+            <path d="
+              M 130 280
+              Q 135 270 150 268
+              L 240 268
+              L 270 200
+              Q 280 178 305 175
+              L 510 175
+              Q 540 178 558 200
+              L 605 268
+              L 680 268
+              Q 700 270 707 280
+              L 700 290
+              L 130 290 Z" fill="url(#bodyShine)" opacity="0.6"/>
 
-            <!-- Lineas de division -->
-            <line x1="395" y1="145" x2="395" y2="200" stroke="#22D3EE" stroke-width="2" stroke-opacity="0.5"/>
+            <!-- Cabina / techo -->
+            <path d="
+              M 285 175
+              Q 295 130 335 122
+              L 480 122
+              Q 525 128 545 175 Z" fill="url(#bodyGrad)" stroke="#0EA5E9" stroke-width="1.8" stroke-opacity="0.7"/>
 
-            <!-- Manijas -->
-            <rect x="320" y="225" width="40" height="5" rx="2" fill="#22D3EE" opacity="0.4"/>
-            <rect x="460" y="225" width="40" height="5" rx="2" fill="#22D3EE" opacity="0.4"/>
+            <!-- ============ PARABRISAS Y VENTANAS ============ -->
+            <!-- Parabrisas frontal -->
+            <path d="M 410 130 L 478 130 Q 515 132 532 172 L 410 172 Z"
+                  fill="url(#glassGrad)" stroke="#67E8F9" stroke-width="1.3" stroke-opacity="0.55"/>
+            <!-- Reflejo parabrisas -->
+            <path d="M 412 134 L 470 134 L 470 144 L 412 156 Z" fill="url(#glassReflect)" opacity="0.6"/>
 
-            <!-- Faros delanteros -->
-            <ellipse cx="685" cy="248" rx="22" ry="14" fill="url(#headLight)"/>
-            <ellipse cx="685" cy="248" rx="14" ry="8" fill="#FDE68A" opacity="0.9"/>
+            <!-- Ventana lateral conductor (centro) -->
+            <path d="M 332 130 L 405 130 L 405 172 L 305 172 Q 308 145 332 130 Z"
+                  fill="url(#glassGrad)" stroke="#67E8F9" stroke-width="1.3" stroke-opacity="0.55"/>
 
-            <!-- Luces traseras -->
-            <rect x="135" y="240" width="14" height="22" rx="3" fill="#EF4444" opacity="0.85"/>
+            <!-- Pilar central -->
+            <line x1="407" y1="125" x2="407" y2="172" stroke="#0F172A" stroke-width="3"/>
+
+            <!-- Marco de ventanas -->
+            <line x1="300" y1="172" x2="540" y2="172" stroke="#0EA5E9" stroke-width="1.5" stroke-opacity="0.6"/>
+
+            <!-- ============ PUERTAS Y DETALLES LATERALES ============ -->
+            <!-- Linea de puerta conductor -->
+            <line x1="358" y1="175" x2="358" y2="340" stroke="#0F172A" stroke-width="2" stroke-opacity="0.6"/>
+            <!-- Linea de puerta pasajero -->
+            <line x1="478" y1="175" x2="478" y2="340" stroke="#0F172A" stroke-width="2" stroke-opacity="0.6"/>
+
+            <!-- Linea de cintura del carro -->
+            <line x1="155" y1="265" x2="600" y2="265" stroke="#22D3EE" stroke-width="1" stroke-opacity="0.4"/>
+
+            <!-- Manijas de puertas -->
+            <g fill="#0F172A" stroke="#67E8F9" stroke-opacity="0.7" stroke-width="0.8">
+              <rect x="335" y="232" width="22" height="6" rx="2"/>
+              <rect x="395" y="232" width="22" height="6" rx="2"/>
+              <rect x="455" y="232" width="22" height="6" rx="2"/>
+            </g>
+
+            <!-- ============ FRENTE DEL CARRO ============ -->
+            <!-- Faro delantero (lado derecho de la imagen) -->
+            <ellipse cx="690" cy="295" rx="26" ry="18" fill="url(#headLight)" opacity="0.95"/>
+            <ellipse cx="690" cy="295" rx="16" ry="11" fill="#FFFBEB" opacity="0.95"/>
+            <ellipse cx="685" cy="290" rx="6" ry="4" fill="#FFFFFF"/>
+            <!-- Marco faro -->
+            <ellipse cx="690" cy="295" rx="26" ry="18" fill="none" stroke="#0EA5E9" stroke-width="1.5" stroke-opacity="0.6"/>
 
             <!-- Parrilla frontal -->
-            <g transform="translate(660, 280)">
-              <rect width="40" height="40" rx="4" fill="#0A1220" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="1.5"/>
-              <line x1="5" y1="10" x2="35" y2="10" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="1"/>
-              <line x1="5" y1="20" x2="35" y2="20" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="1"/>
-              <line x1="5" y1="30" x2="35" y2="30" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="1"/>
+            <g transform="translate(660, 320)">
+              <rect width="55" height="22" rx="4" fill="#020617" stroke="#0EA5E9" stroke-opacity="0.55" stroke-width="1.3"/>
+              <line x1="5" y1="6"  x2="50" y2="6"  stroke="#22D3EE" stroke-opacity="0.5" stroke-width="0.8"/>
+              <line x1="5" y1="11" x2="50" y2="11" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="0.8"/>
+              <line x1="5" y1="16" x2="50" y2="16" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="0.8"/>
             </g>
 
-            <!-- Limpiaparabrisas (linea sobre parabrisas) -->
-            <line x1="320" y1="200" x2="380" y2="155" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="320" cy="200" r="3" fill="#94A3B8"/>
+            <!-- Placa frontal -->
+            <rect x="660" y="345" width="55" height="13" rx="2" fill="#FCD34D" stroke="#92400E" stroke-width="0.8"/>
+            <text x="687" y="355" text-anchor="middle" font-family="JetBrains Mono" font-size="8" font-weight="700" fill="#451A03">PAR-001</text>
 
-            <!-- Espejo retrovisor exterior -->
-            <path d="M 250 195 L 232 188 L 232 200 L 250 205 Z" fill="#0F2742" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="1.5"/>
+            <!-- ============ ATRAS DEL CARRO ============ -->
+            <!-- Stop / luz trasera -->
+            <ellipse cx="118" cy="295" rx="11" ry="22" fill="url(#tailLight)" opacity="0.9"/>
+            <ellipse cx="118" cy="295" rx="6" ry="14" fill="#FCA5A5"/>
 
-            <!-- Ruedas -->
-            <g transform="translate(225, 360)">
-              <circle r="42" fill="#0A1220" stroke="#22D3EE" stroke-width="2.5" stroke-opacity="0.6"/>
-              <circle r="22" fill="#142340" stroke="#22D3EE" stroke-width="1.5" stroke-opacity="0.5"/>
-              <circle r="6" fill="#22D3EE" opacity="0.5"/>
-              <g stroke="#22D3EE" stroke-width="2" stroke-opacity="0.4">
-                <line x1="-22" y1="0" x2="-8" y2="0"/>
-                <line x1="22" y1="0" x2="8" y2="0"/>
-                <line x1="0" y1="-22" x2="0" y2="-8"/>
-                <line x1="0" y1="22" x2="0" y2="8"/>
+            <!-- ============ PARABRISAS DETALLES ============ -->
+            <!-- Limpiaparabrisas (sobre parabrisas) -->
+            <g stroke="#0F172A" stroke-width="2" stroke-linecap="round" opacity="0.85">
+              <line x1="425" y1="170" x2="455" y2="135"/>
+              <circle cx="425" cy="170" r="3" fill="#1F2937"/>
+              <line x1="475" y1="170" x2="505" y2="135"/>
+              <circle cx="475" cy="170" r="3" fill="#1F2937"/>
+            </g>
+
+            <!-- Espejo retrovisor exterior izquierdo -->
+            <g>
+              <path d="M 305 168 L 285 162 L 280 175 L 302 178 Z" fill="#0F2742" stroke="#67E8F9" stroke-opacity="0.6" stroke-width="1.3"/>
+              <line x1="305" y1="172" x2="287" y2="170" stroke="#0F172A" stroke-width="1.2"/>
+            </g>
+
+            <!-- ============ RUEDAS DETALLADAS ============ -->
+            <!-- Rueda trasera (izquierda) -->
+            <g transform="translate(220, 380)">
+              <circle r="48" fill="url(#wheelGrad)" stroke="#1F2937" stroke-width="2"/>
+              <circle r="46" fill="none" stroke="#374151" stroke-width="1.5" opacity="0.7"/>
+              <circle r="28" fill="url(#rimGrad)" opacity="0.85"/>
+              <circle r="26" fill="#1F2937" opacity="0.5"/>
+              <!-- Rayos del rin -->
+              <g stroke="#E5E7EB" stroke-width="2.5" stroke-linecap="round" opacity="0.9">
+                <line x1="0" y1="-25" x2="0" y2="-10"/>
+                <line x1="0" y1="25"  x2="0" y2="10"/>
+                <line x1="-25" y1="0" x2="-10" y2="0"/>
+                <line x1="25" y1="0"  x2="10" y2="0"/>
+                <line x1="-18" y1="-18" x2="-7" y2="-7"/>
+                <line x1="18" y1="18"   x2="7" y2="7"/>
+                <line x1="-18" y1="18"  x2="-7" y2="7"/>
+                <line x1="18" y1="-18"  x2="7" y2="-7"/>
               </g>
-            </g>
-            <g transform="translate(605, 360)">
-              <circle r="42" fill="#0A1220" stroke="#22D3EE" stroke-width="2.5" stroke-opacity="0.6"/>
-              <circle r="22" fill="#142340" stroke="#22D3EE" stroke-width="1.5" stroke-opacity="0.5"/>
-              <circle r="6" fill="#22D3EE" opacity="0.5"/>
-              <g stroke="#22D3EE" stroke-width="2" stroke-opacity="0.4">
-                <line x1="-22" y1="0" x2="-8" y2="0"/>
-                <line x1="22" y1="0" x2="8" y2="0"/>
-                <line x1="0" y1="-22" x2="0" y2="-8"/>
-                <line x1="0" y1="22" x2="0" y2="8"/>
-              </g>
+              <circle r="6" fill="#374151" stroke="#9CA3AF" stroke-width="1"/>
+              <circle r="3" fill="#9CA3AF"/>
             </g>
 
-            <!-- Marcas tecnicas decorativas -->
-            <g font-family="JetBrains Mono" font-size="8" fill="#22D3EE" opacity="0.4">
-              <text x="220" y="425">LLANTA-01</text>
-              <text x="595" y="425">LLANTA-02</text>
+            <!-- Rueda delantera (derecha) -->
+            <g transform="translate(615, 380)">
+              <circle r="48" fill="url(#wheelGrad)" stroke="#1F2937" stroke-width="2"/>
+              <circle r="46" fill="none" stroke="#374151" stroke-width="1.5" opacity="0.7"/>
+              <circle r="28" fill="url(#rimGrad)" opacity="0.85"/>
+              <circle r="26" fill="#1F2937" opacity="0.5"/>
+              <g stroke="#E5E7EB" stroke-width="2.5" stroke-linecap="round" opacity="0.9">
+                <line x1="0" y1="-25" x2="0" y2="-10"/>
+                <line x1="0" y1="25"  x2="0" y2="10"/>
+                <line x1="-25" y1="0" x2="-10" y2="0"/>
+                <line x1="25" y1="0"  x2="10" y2="0"/>
+                <line x1="-18" y1="-18" x2="-7" y2="-7"/>
+                <line x1="18" y1="18"   x2="7" y2="7"/>
+                <line x1="-18" y1="18"  x2="-7" y2="7"/>
+                <line x1="18" y1="-18"  x2="-7" y2="-7"/>
+              </g>
+              <circle r="6" fill="#374151" stroke="#9CA3AF" stroke-width="1"/>
+              <circle r="3" fill="#9CA3AF"/>
+            </g>
+
+            <!-- ============ ETIQUETAS TECNICAS LATERAL ============ -->
+            <g font-family="JetBrains Mono" font-size="8" fill="#22D3EE" opacity="0.45">
+              <line x1="220" y1="445" x2="220" y2="435" stroke="#22D3EE" stroke-width="0.5"/>
+              <text x="195" y="455">LLANTA-01</text>
+              <line x1="615" y1="445" x2="615" y2="435" stroke="#22D3EE" stroke-width="0.5"/>
+              <text x="590" y="455">LLANTA-02</text>
+            </g>
+
+            <!-- Logo PAR en la puerta -->
+            <g transform="translate(395, 300)">
+              <circle cx="0" cy="0" r="14" fill="#FFFFFF" opacity="0.9"/>
+              <text x="0" y="4" text-anchor="middle" font-family="Bebas Neue" font-size="13" font-weight="700" fill="#0F2742">PAR</text>
             </g>
 
           </svg>
 
           <!-- ========== HOTSPOTS INTERACTIVOS (sobreposiciones absolutas) ========== -->
-          <!-- Posiciones porcentuales para que respondan al resize -->
-          <div id="hotspots-container" class="absolute inset-0 pointer-events-none">
+          <!-- z-index alto + pointer-events controlados a nivel hijo -->
+          <div id="hotspots-container" class="absolute inset-0" style="z-index: 30; pointer-events: none;">
             <!-- Generados dinamicamente desde JS -->
+          </div>
+
+          <!-- Indicador "Haz click en los puntos" cuando empieza el juego -->
+          <div id="hint-click" class="absolute left-1/2 bottom-4 -translate-x-1/2 pointer-events-none transition-opacity duration-500" style="z-index: 25;">
+            <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 border border-amber-400/50 backdrop-blur-sm">
+              <span class="w-2 h-2 rounded-full bg-amber-400 anim-blink"></span>
+              <span class="mono-font text-[11px] text-amber-300 uppercase tracking-widest">Click en los puntos amarillos del vehiculo</span>
+            </div>
           </div>
         </div>
 
@@ -1115,6 +1298,71 @@
     </div>
   </section>
 
+  <!-- =================== MODAL DE INSTRUCCIONES INICIALES =============== -->
+  <div id="modal-instructions" class="hidden modal-backdrop">
+    <div class="panel-elevated p-7 max-w-xl w-full corner-marks relative">
+      <span class="cm-tl"></span><span class="cm-tr"></span>
+      <span class="cm-bl"></span><span class="cm-br"></span>
+
+      <div class="flex items-start gap-3 mb-5 pb-4 border-b border-white/5">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+             style="background: linear-gradient(135deg, #2D7FF9, #0066CC);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2">
+            <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <div class="flex-grow">
+          <span class="pill pill-blue mb-1.5">Instrucciones del Reto</span>
+          <h3 class="display-font text-2xl text-white tracking-wide leading-tight mt-1">COMO JUGAR</h3>
+        </div>
+      </div>
+
+      <div class="space-y-3 text-sm text-slate-300 leading-relaxed">
+        <div class="flex gap-3 items-start">
+          <span class="mono-font text-amber-400 font-bold flex-shrink-0">01</span>
+          <p>Veras un <strong class="text-white">vehiculo de inspeccion</strong> con <strong class="text-amber-400">10 puntos amarillos pulsantes</strong> repartidos sobre sus componentes criticos PESV.</p>
+        </div>
+        <div class="flex gap-3 items-start">
+          <span class="mono-font text-amber-400 font-bold flex-shrink-0">02</span>
+          <p>Haz <strong class="text-white">click en cada punto amarillo</strong> para abrir la pregunta asociada al componente.</p>
+        </div>
+        <div class="flex gap-3 items-start">
+          <span class="mono-font text-amber-400 font-bold flex-shrink-0">03</span>
+          <p>Cada respuesta <strong class="text-emerald-400">correcta</strong> suma <strong>+10 puntos</strong>. Cada respuesta <strong class="text-red-400">incorrecta</strong> resta <strong>1 vida</strong> y suma <strong>+10 segundos</strong> de penalizacion.</p>
+        </div>
+        <div class="flex gap-3 items-start">
+          <span class="mono-font text-amber-400 font-bold flex-shrink-0">04</span>
+          <p>Tienes <strong class="text-red-400">3 vidas</strong>. Si las pierdes todas quedas <strong>descalificado</strong>.</p>
+        </div>
+        <div class="flex gap-3 items-start">
+          <span class="mono-font text-amber-400 font-bold flex-shrink-0">05</span>
+          <p>Completa los <strong class="text-white">10 puntos</strong> y haz click en <strong class="text-cyan-400">FINALIZAR</strong> para registrar tu marca. Apruebas con <strong>7 o mas aciertos</strong>.</p>
+        </div>
+        <div class="flex gap-3 items-start">
+          <span class="mono-font text-amber-400 font-bold flex-shrink-0">06</span>
+          <p>Todos los jugadores compiten en tiempo real. El ranking se actualiza cada 3 segundos.</p>
+        </div>
+      </div>
+
+      <div class="mt-5 p-3 rounded-lg bg-amber-500/8 border border-amber-500/25">
+        <p class="text-xs text-amber-300 leading-relaxed">
+          <strong>Tip:</strong> Pasa el cursor sobre cada punto para ver que componente representa. El cronometro inicia cuando cierres este aviso.
+        </p>
+      </div>
+
+      <div class="mt-5 pt-4 border-t border-white/5 flex justify-end">
+        <button onclick="cerrarInstrucciones()" class="btn-primary">
+          <span class="flex items-center gap-2">
+            Comenzar el Reto
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- =================== MODAL DE PREGUNTA ============================= -->
   <div id="modal-question" class="hidden modal-backdrop">
     <div class="panel-elevated p-6 max-w-2xl w-full corner-marks relative">
@@ -1211,7 +1459,7 @@ const PUNTOS_CRITICOS = [
   {
     id: 1, key: "luces", componente: "Faros Delanteros",
     titulo: "SISTEMA DE ILUMINACION",
-    pos: { left: 85.5, top: 47 },
+    pos: { left: 86, top: 61 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.3 4.5 3 5.7V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.3c1.7-1.2 3-3.3 3-5.7a7 7 0 0 0-7-7zM9 21h6M10 18h4"/></svg>',
     pregunta: "Segun el PESV, ¿con que frecuencia debes verificar el correcto funcionamiento de luces altas, bajas, direccionales y de freno antes de iniciar la operacion?",
     opciones: [
@@ -1225,7 +1473,7 @@ const PUNTOS_CRITICOS = [
   {
     id: 2, key: "llanta-delantera", componente: "Llanta Delantera",
     titulo: "PROFUNDIDAD DE LABRADO",
-    pos: { left: 28, top: 76 },
+    pos: { left: 27, top: 81 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="3" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="21"/><line x1="3" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="21" y2="12"/></svg>',
     pregunta: "¿Cual es la profundidad MINIMA legal del labrado de las llantas en Colombia, medida en cualquier punto de la banda de rodadura?",
     opciones: [
@@ -1239,7 +1487,7 @@ const PUNTOS_CRITICOS = [
   {
     id: 3, key: "llanta-trasera", componente: "Sistema de Frenos",
     titulo: "CONTROL DE FRENADO",
-    pos: { left: 73, top: 76 },
+    pos: { left: 77, top: 81 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><path d="M3 12a9 9 0 0 1 18 0"/></svg>',
     pregunta: "Durante el preoperacional notas que al frenar el vehiculo tira ligeramente hacia un lado. ¿Cual es la accion correcta segun el PESV?",
     opciones: [
@@ -1253,7 +1501,7 @@ const PUNTOS_CRITICOS = [
   {
     id: 4, key: "cinturon", componente: "Cinturon de Seguridad",
     titulo: "RETENCION OBLIGATORIA",
-    pos: { left: 53, top: 50 },
+    pos: { left: 55, top: 58 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M20 12c0 5-3 8-8 8s-8-3-8-8 3-8 8-8 8 3 8 8z"/><path d="M9 9l6 6M15 9l-6 6"/></svg>',
     pregunta: "¿En que casos NO es obligatorio el uso del cinturon de seguridad para los ocupantes del vehiculo?",
     opciones: [
@@ -1267,7 +1515,7 @@ const PUNTOS_CRITICOS = [
   {
     id: 5, key: "espejo", componente: "Espejos Retrovisores",
     titulo: "ELIMINACION DE PUNTO CIEGO",
-    pos: { left: 38, top: 52 },
+    pos: { left: 36, top: 36 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>',
     pregunta: "El \"punto ciego\" del vehiculo se define como:",
     opciones: [
@@ -1281,7 +1529,7 @@ const PUNTOS_CRITICOS = [
   {
     id: 6, key: "botiquin", componente: "Botiquin Vehicular",
     titulo: "KIT DE PRIMEROS AUXILIOS",
-    pos: { left: 19, top: 55 },
+    pos: { left: 18, top: 62 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>',
     pregunta: "¿Cuales son los elementos MINIMOS que debe contener el botiquin de primeros auxilios de un vehiculo de servicio?",
     opciones: [
@@ -1295,7 +1543,7 @@ const PUNTOS_CRITICOS = [
   {
     id: 7, key: "extintor", componente: "Extintor de Incendios",
     titulo: "PREVENCION DE INCENDIO",
-    pos: { left: 76, top: 55 },
+    pos: { left: 67, top: 64 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M9 5h6v3h-6z"/><path d="M10 8v13a2 2 0 0 0 2 2 2 2 0 0 0 2-2V8"/><path d="M7 5l2-3M17 5l-2-3"/></svg>',
     pregunta: "¿Que tipo y capacidad de extintor debe portar un vehiculo de servicio segun la normativa colombiana?",
     opciones: [
@@ -1309,7 +1557,7 @@ const PUNTOS_CRITICOS = [
   {
     id: 8, key: "documentos", componente: "Documentacion Legal",
     titulo: "DOCUMENTOS DE OPERACION",
-    pos: { left: 60, top: 35 },
+    pos: { left: 47, top: 27 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>',
     pregunta: "¿Que documentos debe portar SIEMPRE el conductor durante la operacion del vehiculo?",
     opciones: [
@@ -1323,7 +1571,7 @@ const PUNTOS_CRITICOS = [
   {
     id: 9, key: "triangulos", componente: "Señales de Emergencia",
     titulo: "TRIANGULOS REFLECTIVOS",
-    pos: { left: 88, top: 78 },
+    pos: { left: 8, top: 84 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
     pregunta: "Si el vehiculo queda varado en una via abierta, ¿a que distancia se deben ubicar los triangulos reflectivos?",
     opciones: [
@@ -1337,7 +1585,7 @@ const PUNTOS_CRITICOS = [
   {
     id: 10, key: "limpia", componente: "Limpiaparabrisas",
     titulo: "VISIBILIDAD EN MARCHA",
-    pos: { left: 47, top: 38 },
+    pos: { left: 60, top: 32 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M2 12c2-4 6-6 10-6s8 2 10 6"/><line x1="6" y1="20" x2="14" y2="6"/><circle cx="6" cy="20" r="1.5"/></svg>',
     pregunta: "Durante la inspeccion preoperacional detectas que los limpiaparabrisas dejan rayas y no limpian bien. ¿Que debes hacer?",
     opciones: [
@@ -1760,6 +2008,34 @@ function escapeHtml(s) {
   });
 }
 
+// Lanza pequeñas particulas de confeti desde un elemento
+function lanzarConfeti(target) {
+  if (!target) return;
+  const colors = ["#FCD34D", "#34D399", "#60A5FA", "#F472B6", "#A78BFA", "#22D3EE"];
+  const rect = target.getBoundingClientRect();
+  const stage = target.closest("#car-stage") || document.body;
+  const stageRect = stage.getBoundingClientRect();
+  const baseLeft = rect.left + rect.width / 2 - stageRect.left;
+  const baseTop  = rect.top  + rect.height / 2 - stageRect.top;
+
+  for (let i = 0; i < 14; i++) {
+    const piece = document.createElement("span");
+    piece.className = "confetti-piece";
+    piece.style.background = colors[i % colors.length];
+    piece.style.left = baseLeft + "px";
+    piece.style.top  = baseTop  + "px";
+    piece.style.borderRadius = (i % 3 === 0) ? "50%" : "1px";
+    const angle = (Math.PI * 2) * (i / 14) + (Math.random() * 0.6 - 0.3);
+    const dist  = 70 + Math.random() * 50;
+    piece.style.setProperty("--tx", Math.cos(angle) * dist + "px");
+    piece.style.setProperty("--ty", (Math.sin(angle) * dist - 30) + "px");
+    piece.style.setProperty("--rot", (Math.random() * 720 - 360) + "deg");
+    piece.style.zIndex = "70";
+    stage.appendChild(piece);
+    setTimeout(() => piece.remove(), 1000);
+  }
+}
+
 function iniciarPolling(containerId, updateId, countId) {
   detenerPolling();
   actualizarLeaderboard(containerId, updateId, countId);
@@ -1787,24 +2063,24 @@ async function iniciarJuego() {
   playSound("click");
 
   STATE.juegoIniciado = true;
-  STATE.player.tiempoInicio = Date.now();
   STATE.player.puntaje = 0;
   STATE.player.vidas = 3;
   STATE.player.penalizaciones = 0;
   STATE.player.puntosCompletados = [];
   STATE.player.finalizado = false;
+  STATE.player.tiempoInicio = null; // Se establecera al cerrar instrucciones
 
   renderHotspots();
-  actualizarStatsJuego();
   document.getElementById("header-stats").classList.remove("hidden");
   document.getElementById("header-stats").classList.add("flex");
 
-  // Iniciar cronometro
-  if (STATE.timerInterval) clearInterval(STATE.timerInterval);
-  STATE.timerInterval = setInterval(actualizarStatsJuego, 100);
-
   // Cambiar pantalla
   mostrarPantalla("screen-game");
+
+  // Mostrar instrucciones (el cronometro inicia cuando se cierren)
+  const modalInstr = document.getElementById("modal-instructions");
+  modalInstr.classList.remove("hidden");
+  modalInstr.classList.add("flex");
 
   // Reportar inicio
   await llamarAPI("updateProgress", {
@@ -1822,25 +2098,46 @@ async function iniciarJuego() {
   iniciarPolling("leaderboard-list-game", "lb-update-game", "lb-count-game");
 }
 
+function cerrarInstrucciones() {
+  playSound("click");
+  const modalInstr = document.getElementById("modal-instructions");
+  modalInstr.classList.add("hidden");
+  modalInstr.classList.remove("flex");
+
+  // Ahora si arranca el cronometro
+  STATE.player.tiempoInicio = Date.now();
+  actualizarStatsJuego();
+  if (STATE.timerInterval) clearInterval(STATE.timerInterval);
+  STATE.timerInterval = setInterval(actualizarStatsJuego, 100);
+}
+
 function renderHotspots() {
   const cont = document.getElementById("hotspots-container");
   cont.innerHTML = "";
-  cont.style.pointerEvents = "none";
+  // El contenedor mantiene pointer-events: none, los hotspots tienen auto via CSS
 
-  PUNTOS_CRITICOS.forEach(p => {
+  PUNTOS_CRITICOS.forEach((p, idx) => {
     const hs = document.createElement("button");
-    hs.className = "hotspot";
-    hs.style.left = "calc(" + p.pos.left + "% - 19px)";
-    hs.style.top  = "calc(" + p.pos.top + "% - 19px)";
-    hs.style.pointerEvents = "auto";
+    hs.type = "button";
+    hs.className = "hotspot anim-slide-up";
+    hs.style.left = "calc(" + p.pos.left + "% - 21px)";
+    hs.style.top  = "calc(" + p.pos.top  + "% - 21px)";
+    hs.style.animationDelay = (idx * 70) + "ms";
     hs.dataset.key = p.key;
     hs.title = p.componente;
-    hs.innerHTML = `
-      <span class="ring"></span>
-      <span class="ring delay"></span>
-      <span class="core">${p.id}</span>
-    `;
-    hs.onclick = () => abrirPregunta(p);
+    hs.setAttribute("aria-label", "Punto " + p.id + ": " + p.componente);
+    hs.innerHTML =
+      '<span class="ring"></span>' +
+      '<span class="ring delay"></span>' +
+      '<span class="core">' + p.id + '</span>' +
+      '<span class="hs-tooltip">' + escapeHtml(p.componente) + '</span>';
+
+    // Listener robusto - addEventListener mejor que onclick
+    hs.addEventListener("click", function(ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      abrirPregunta(p);
+    });
 
     if (STATE.player.puntosCompletados.includes(p.key)) {
       hs.classList.add("done");
@@ -1848,6 +2145,13 @@ function renderHotspots() {
 
     cont.appendChild(hs);
   });
+
+  // Mostrar el hint los primeros 7 segundos del juego
+  const hint = document.getElementById("hint-click");
+  if (hint) {
+    hint.style.opacity = "1";
+    setTimeout(() => { if (hint) hint.style.opacity = "0"; }, 7000);
+  }
 }
 
 function actualizarStatsJuego() {
@@ -2002,10 +2306,16 @@ async function responderPregunta(idx) {
     fb.style.border = "1px solid rgba(239, 68, 68, 0.3)";
   }
 
-  // Marcar hotspot
+  // Marcar hotspot + efectos visuales
   const hs = document.querySelector('#hotspots-container .hotspot[data-key="' + punto.key + '"]');
   if (hs) {
     hs.classList.add(esCorrecta ? "done" : "failed");
+    if (esCorrecta) {
+      lanzarConfeti(hs);
+    } else {
+      hs.classList.add("anim-shake");
+      setTimeout(() => hs.classList.remove("anim-shake"), 500);
+    }
   }
 
   // Registrar respuesta en sheets
