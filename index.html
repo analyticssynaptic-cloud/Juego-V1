@@ -2,7 +2,11 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes" />
+<meta name="theme-color" content="#04060B" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <title>Ruta Segura PESV · Centro de Control · PAR Servicios</title>
 
 <!-- Tailwind CSS -->
@@ -250,6 +254,23 @@
   .hotspot.failed .core { background: linear-gradient(135deg, #F87171, #DC2626); color: white; box-shadow: 0 0 18px rgba(239, 68, 68, 0.7); border-color: #FCA5A5; }
   .hotspot.failed .ring { display: none; }
 
+  /* Variantes por categoria de actor vial */
+  .hotspot.cat-conductor  .core { background: linear-gradient(135deg, #FBBF24, #F59E0B); border-color: #FCD34D; box-shadow: 0 0 18px rgba(245, 158, 11, 0.8), inset 0 -2px 4px rgba(0,0,0,0.25); color: #1F1300; }
+  .hotspot.cat-conductor  .ring { border-color: #F59E0B; }
+
+  .hotspot.cat-peaton     .core { background: linear-gradient(135deg, #22D3EE, #0891B2); border-color: #67E8F9; box-shadow: 0 0 18px rgba(34, 211, 238, 0.85), inset 0 -2px 4px rgba(0,0,0,0.25); color: #0C2233; }
+  .hotspot.cat-peaton     .ring { border-color: #22D3EE; }
+
+  .hotspot.cat-emergencia .core { background: linear-gradient(135deg, #F87171, #DC2626); border-color: #FCA5A5; box-shadow: 0 0 18px rgba(239, 68, 68, 0.85), inset 0 -2px 4px rgba(0,0,0,0.25); color: #FFF; }
+  .hotspot.cat-emergencia .ring { border-color: #EF4444; }
+
+  .hotspot.cat-otros      .core { background: linear-gradient(135deg, #C084FC, #9333EA); border-color: #D8B4FE; box-shadow: 0 0 18px rgba(192, 132, 252, 0.85), inset 0 -2px 4px rgba(0,0,0,0.25); color: #FFF; }
+  .hotspot.cat-otros      .ring { border-color: #A855F7; }
+
+  /* Done y failed sobreescriben las categorias */
+  .hotspot.done   .core { background: linear-gradient(135deg, #34D399, #059669) !important; border-color: #6EE7B7 !important; color: white !important; box-shadow: 0 0 18px rgba(16, 185, 129, 0.7) !important; }
+  .hotspot.failed .core { background: linear-gradient(135deg, #F87171, #DC2626) !important; border-color: #FCA5A5 !important; color: white !important; box-shadow: 0 0 18px rgba(239, 68, 68, 0.7) !important; }
+
   /* Tooltip sobre cada hotspot */
   .hs-tooltip {
     position: absolute;
@@ -347,14 +368,57 @@
   .conn-dot.offline { background: var(--acc-red); box-shadow: 0 0 8px var(--acc-red); }
   .conn-dot.warn    { background: var(--acc-amber); box-shadow: 0 0 8px var(--acc-amber); }
 
+  /* ============ RESPONSIVE / MOBILE FIRST ============ */
+  @media (max-width: 1100px) {
+    .app-grid { grid-template-columns: 1fr !important; }
+  }
+  @media (max-width: 760px) {
+    /* Tipografias mas pequeñas en mobile */
+    .display-font.text-2xl { font-size: 1.35rem !important; }
+    .display-font.text-3xl { font-size: 1.6rem !important; }
+    .display-font.text-4xl { font-size: 1.85rem !important; }
+    .display-font.text-5xl { font-size: 2.1rem !important; }
+    /* Paneles con menos padding */
+    .panel        { padding: 16px !important; }
+    .panel-elevated { padding: 16px !important; }
+    /* Modal mas compacto */
+    .modal-backdrop { padding: 10px !important; }
+    .opt-btn { padding: 11px 13px !important; font-size: 13px !important; }
+    .opt-btn .opt-letter { width: 26px !important; height: 26px !important; font-size: 11px !important; }
+    /* Hotspots mas pequeños */
+    .hotspot { width: 36px !important; height: 36px !important; }
+    .hotspot .core { font-size: 11px !important; inset: 8px !important; }
+    .hs-tooltip { font-size: 9px !important; padding: 3px 6px !important; }
+    /* Pills */
+    .pill { font-size: 9.5px !important; padding: 3px 7px !important; }
+    /* Botones */
+    .btn-primary, .btn-ghost { padding: 10px 14px !important; font-size: 13px !important; }
+    /* Stats grid en game */
+    .stat-card { padding: 8px !important; }
+    .stat-value { font-size: 1.05rem !important; }
+    .stat-label { font-size: 9px !important; }
+    /* Header padding reducido */
+    header.app-header { padding: 8px 12px !important; }
+  }
+  @media (max-width: 480px) {
+    .display-font.text-2xl { font-size: 1.2rem !important; }
+    .display-font.text-3xl { font-size: 1.4rem !important; }
+    .display-font.text-4xl { font-size: 1.65rem !important; }
+    .panel, .panel-elevated { padding: 12px !important; border-radius: 14px !important; }
+    .hotspot { width: 32px !important; height: 32px !important; }
+    .hotspot .core { font-size: 10px !important; inset: 7px !important; }
+    .modal-backdrop { padding: 8px !important; }
+    .opt-btn { padding: 10px 11px !important; font-size: 12.5px !important; }
+    .opt-btn .opt-letter { width: 24px !important; height: 24px !important; font-size: 10.5px !important; }
+    .stat-value { font-size: 0.95rem !important; }
+    .stat-label { font-size: 8.5px !important; }
+  }
+
   /* Posicionado layout principal */
   .app-grid {
     display: grid;
     grid-template-columns: 1fr 380px;
     gap: 20px;
-  }
-  @media (max-width: 1100px) {
-    .app-grid { grid-template-columns: 1fr; }
   }
 
   /* Bordes tipo CRT laterales */
@@ -371,7 +435,7 @@
     opacity: 0.55;
   }
 
-  /* Coche container */
+  /* Coche container - responsive */
   .car-stage {
     background:
       radial-gradient(ellipse 80% 50% at 50% 70%, rgba(45, 127, 249, 0.08) 0%, transparent 60%),
@@ -380,7 +444,20 @@
     border-radius: 22px;
     position: relative;
     overflow: hidden;
-    min-height: 420px;
+    min-height: 320px;
+    aspect-ratio: 1100 / 480;
+    width: 100%;
+  }
+  @media (max-width: 700px) {
+    .car-stage { min-height: 240px; aspect-ratio: 1100 / 520; border-radius: 16px; }
+    .hotspot { width: 36px !important; height: 36px !important; }
+    .hotspot .core { font-size: 11px !important; inset: 8px !important; }
+    .hs-tooltip { font-size: 9px !important; padding: 3px 6px !important; }
+  }
+  @media (max-width: 420px) {
+    .car-stage { aspect-ratio: 1100 / 600; }
+    .hotspot { width: 32px !important; height: 32px !important; }
+    .hotspot .core { font-size: 10px !important; inset: 7px !important; }
   }
   .car-stage .grid-bg {
     position: absolute; inset: 0;
@@ -484,7 +561,7 @@
 <body class="min-h-screen flex flex-col relative z-10">
 
 <!-- ============== CABECERA ============== -->
-<header class="border-b border-white/5 backdrop-blur-md bg-black/30 sticky top-0 z-30">
+<header class="app-header border-b border-white/5 backdrop-blur-md bg-black/30 sticky top-0 z-30">
   <div class="max-w-[1400px] mx-auto px-5 py-3 flex items-center justify-between gap-4 flex-wrap">
 
     <!-- Logo y Titulo -->
@@ -556,7 +633,7 @@
           </h2>
           <p class="text-slate-400 text-sm leading-relaxed max-w-md">
             Capacitacion gamificada multijugador del Plan Estrategico de Seguridad Vial.
-            Inspecciona los 10 puntos criticos del vehiculo, responde correctamente y
+            Inspecciona los 13 puntos criticos (vehiculo, peaton y emergencia), responde correctamente y
             compite en tiempo real con tu equipo.
           </p>
 
@@ -774,7 +851,7 @@
               </div>
               <div>
                 <div class="text-sm font-bold text-white">Tiempo neto</div>
-                <div class="text-xs text-slate-400 mt-0.5">El cronometro arranca al iniciar la inspeccion y solo se detiene al finalizar los 10 puntos.</div>
+                <div class="text-xs text-slate-400 mt-0.5">El cronometro arranca al iniciar la inspeccion y solo se detiene al finalizar los 13 puntos.</div>
               </div>
             </div>
 
@@ -899,8 +976,8 @@
                style="background: linear-gradient(180deg, rgba(34, 211, 238, 0.15), transparent); animation: scanLine 4s linear infinite;">
           </div>
 
-          <!-- SVG del vehiculo - z-index BAJO para que los hotspots queden encima -->
-          <svg viewBox="0 0 800 480" class="w-full h-full block relative" style="max-height: 480px; z-index: 1; pointer-events: none;" preserveAspectRatio="xMidYMid meet">
+          <!-- SVG de la escena completa - viewBox 1100x520 - peaton + coche + emergencia + medios prohibidos -->
+          <svg viewBox="0 0 1100 520" class="w-full h-full block relative" style="z-index: 1; pointer-events: none;" preserveAspectRatio="xMidYMid meet">
 
             <defs>
               <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
@@ -943,197 +1020,273 @@
                 <stop offset="0%"  stop-color="#E5E7EB" stop-opacity="0.9"/>
                 <stop offset="100%" stop-color="#6B7280" stop-opacity="0.7"/>
               </linearGradient>
-              <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="4" result="blur"/>
-                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
+              <linearGradient id="roadGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1E293B" stop-opacity="0.7"/>
+                <stop offset="100%" stop-color="#0F172A" stop-opacity="0.95"/>
+              </linearGradient>
             </defs>
 
             <!-- Lineas blueprint de fondo -->
-            <g stroke="#22D3EE" stroke-opacity="0.14" stroke-width="0.7" stroke-dasharray="4 4">
-              <line x1="40"  y1="200" x2="760" y2="200"/>
-              <line x1="40"  y1="320" x2="760" y2="320"/>
-              <line x1="120" y1="50"  x2="120" y2="440"/>
-              <line x1="680" y1="50"  x2="680" y2="440"/>
+            <g stroke="#22D3EE" stroke-opacity="0.10" stroke-width="0.6" stroke-dasharray="4 4">
+              <line x1="50"   y1="80"  x2="1050" y2="80"/>
+              <line x1="50"   y1="440" x2="1050" y2="440"/>
+              <line x1="50"   y1="60"  x2="50"   y2="460"/>
+              <line x1="1050" y1="60"  x2="1050" y2="460"/>
             </g>
 
             <!-- Etiquetas tecnicas -->
-            <text x="44" y="56" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.55">VEH-01 · RUTA SEGURA</text>
-            <text x="44" y="438" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.55">PESV · RES 40595 · 2022</text>
-            <text x="640" y="56" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.55">CHECKLIST 10/10</text>
-            <text x="640" y="438" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.55">PAR SERVICIOS</text>
+            <text x="55" y="48" font-family="JetBrains Mono" font-size="10" fill="#22D3EE" opacity="0.55">PESV · ESCENARIO INTERACTIVO · RES 40595/2022</text>
+            <text x="55" y="490" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.45">ZONA-A: PEATON</text>
+            <text x="470" y="490" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.45">ZONA-B: VEHICULO / CONDUCTOR</text>
+            <text x="900" y="490" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.45">ZONA-C: EMERGENCIA</text>
 
+            <!-- ============ CALZADA / VIA ============ -->
+            <rect x="50" y="380" width="1000" height="80" fill="url(#roadGrad)" stroke="#22D3EE" stroke-opacity="0.25" stroke-width="0.7"/>
+
+            <!-- Lineas amarillas centrales (linea de carril) -->
+            <g stroke="#FCD34D" stroke-width="2.5" stroke-opacity="0.55" stroke-dasharray="20 14">
+              <line x1="60" y1="420" x2="1040" y2="420"/>
+            </g>
+
+            <!-- ============ ZONA-A: PASO PEATONAL (lado izquierdo) ============ -->
+            <!-- Banco peatonal / acera -->
+            <rect x="50" y="320" width="290" height="60" fill="#1F2937" stroke="#22D3EE" stroke-opacity="0.35" stroke-width="0.8"/>
+            <!-- Bordillo -->
+            <rect x="50" y="375" width="290" height="6" fill="#475569"/>
+
+            <!-- Lineas del paso peatonal (cebra) - sobre la calzada -->
+            <g fill="#F8FAFC" opacity="0.92">
+              <rect x="155" y="385" width="22" height="70"/>
+              <rect x="185" y="385" width="22" height="70"/>
+              <rect x="215" y="385" width="22" height="70"/>
+              <rect x="245" y="385" width="22" height="70"/>
+              <rect x="275" y="385" width="22" height="70"/>
+              <rect x="305" y="385" width="22" height="70"/>
+            </g>
+
+            <!-- Semaforo peatonal -->
+            <g transform="translate(98, 230)">
+              <!-- Poste -->
+              <rect x="3" y="60" width="3" height="160" fill="#475569"/>
+              <!-- Caja -->
+              <rect x="-12" y="0" width="32" height="62" rx="4" fill="#0F172A" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="1"/>
+              <!-- Luz roja apagada -->
+              <circle cx="4" cy="14" r="9" fill="#7F1D1D" opacity="0.6"/>
+              <!-- Luz verde encendida (camina) -->
+              <circle cx="4" cy="42" r="9" fill="#10B981"/>
+              <circle cx="4" cy="42" r="6" fill="#6EE7B7"/>
+              <!-- Icono peatoncito blanco -->
+              <g fill="#FFFFFF" transform="translate(0, 36)">
+                <circle cx="4" cy="2.5" r="1.6"/>
+                <rect x="2.7" y="4.3" width="2.5" height="5" rx="0.8"/>
+                <line x1="2.7" y1="9.5" x2="1.8" y2="12.5" stroke="#FFFFFF" stroke-width="0.8"/>
+                <line x1="5.2" y1="9.5" x2="6.1" y2="12.5" stroke="#FFFFFF" stroke-width="0.8"/>
+              </g>
+            </g>
+
+            <!-- PEATON cruzando -->
+            <g transform="translate(220, 295)">
+              <!-- Cabeza -->
+              <circle cx="0" cy="0" r="10" fill="#FDE68A" stroke="#0F172A" stroke-width="1"/>
+              <!-- Pelo -->
+              <path d="M -10 -2 Q -8 -10 0 -10 Q 8 -10 10 -2 L 9 0 Q 5 -5 0 -5 Q -5 -5 -9 0 Z" fill="#451A03"/>
+              <!-- Torso (chaqueta verde) -->
+              <path d="M -12 10 Q -10 6 -7 6 L 7 6 Q 10 6 12 10 L 14 38 Q 6 42 0 42 Q -6 42 -14 38 Z" fill="#15803D" stroke="#052E16" stroke-width="1"/>
+              <!-- Brazos -->
+              <path d="M -12 12 L -18 32 L -15 33 L -9 16 Z" fill="#15803D" stroke="#052E16" stroke-width="0.8"/>
+              <path d="M 12 12 L 18 32 L 15 33 L 9 16 Z" fill="#15803D" stroke="#052E16" stroke-width="0.8"/>
+              <!-- Mano con celular (distraccion) -->
+              <rect x="14" y="28" width="7" height="11" rx="1.5" fill="#0F172A" stroke="#22D3EE" stroke-opacity="0.7" stroke-width="0.8"/>
+              <rect x="15" y="30" width="5" height="6" fill="#3B82F6" opacity="0.8"/>
+              <!-- Piernas -->
+              <rect x="-9" y="40" width="7" height="32" fill="#1E40AF" stroke="#0F172A" stroke-width="0.8"/>
+              <rect x="2" y="40" width="7" height="32" fill="#1E40AF" stroke="#0F172A" stroke-width="0.8"/>
+              <!-- Zapatos -->
+              <ellipse cx="-5.5" cy="74" rx="5" ry="2.5" fill="#0F172A"/>
+              <ellipse cx="5.5" cy="74" rx="5" ry="2.5" fill="#0F172A"/>
+            </g>
+
+            <!-- ============ ZONA-B: VEHICULO (centro-derecha) ============ -->
             <!-- Sombra bajo el carro -->
-            <ellipse cx="410" cy="412" rx="310" ry="16" fill="url(#floorGrad)"/>
+            <ellipse cx="710" cy="415" rx="240" ry="12" fill="url(#floorGrad)"/>
 
-            <!-- ============ CHASIS PRINCIPAL ============ -->
-            <!-- Cuerpo inferior (parte baja del carro) -->
+            <!-- Cuerpo inferior del coche -->
             <path d="
-              M 110 340
-              L 130 280
-              Q 135 270 150 268
-              L 240 268
-              L 270 200
-              Q 280 178 305 175
-              L 510 175
-              Q 540 178 558 200
-              L 605 268
-              L 680 268
-              Q 700 270 707 280
-              L 725 340
-              L 700 365
-              L 130 365
-              Z" fill="url(#bodyGrad)" stroke="#0EA5E9" stroke-width="1.8" stroke-opacity="0.7"/>
+              M 480 350
+              L 495 295
+              Q 498 287 510 286
+              L 575 286
+              L 598 232
+              Q 605 218 620 217
+              L 800 217
+              Q 818 220 830 235
+              L 858 286
+              L 905 286
+              Q 920 288 925 295
+              L 940 350
+              L 920 370
+              L 500 370
+              Z" fill="url(#bodyGrad)" stroke="#0EA5E9" stroke-width="1.6" stroke-opacity="0.7"/>
 
             <!-- Brillo superior cuerpo -->
             <path d="
-              M 130 280
-              Q 135 270 150 268
-              L 240 268
-              L 270 200
-              Q 280 178 305 175
-              L 510 175
-              Q 540 178 558 200
-              L 605 268
-              L 680 268
-              Q 700 270 707 280
-              L 700 290
-              L 130 290 Z" fill="url(#bodyShine)" opacity="0.6"/>
+              M 495 295 Q 498 287 510 286 L 575 286 L 598 232 Q 605 218 620 217 L 800 217 Q 818 220 830 235 L 858 286 L 905 286 Q 920 288 925 295 L 922 302 L 498 302 Z" fill="url(#bodyShine)" opacity="0.55"/>
 
             <!-- Cabina / techo -->
             <path d="
-              M 285 175
-              Q 295 130 335 122
-              L 480 122
-              Q 525 128 545 175 Z" fill="url(#bodyGrad)" stroke="#0EA5E9" stroke-width="1.8" stroke-opacity="0.7"/>
+              M 612 220
+              Q 620 186 645 180
+              L 770 180
+              Q 800 184 815 220 Z" fill="url(#bodyGrad)" stroke="#0EA5E9" stroke-width="1.6" stroke-opacity="0.7"/>
 
-            <!-- ============ PARABRISAS Y VENTANAS ============ -->
-            <!-- Parabrisas frontal -->
-            <path d="M 410 130 L 478 130 Q 515 132 532 172 L 410 172 Z"
-                  fill="url(#glassGrad)" stroke="#67E8F9" stroke-width="1.3" stroke-opacity="0.55"/>
-            <!-- Reflejo parabrisas -->
-            <path d="M 412 134 L 470 134 L 470 144 L 412 156 Z" fill="url(#glassReflect)" opacity="0.6"/>
+            <!-- Parabrisas -->
+            <path d="M 705 188 L 768 188 Q 795 192 810 217 L 705 217 Z"
+                  fill="url(#glassGrad)" stroke="#67E8F9" stroke-width="1.2" stroke-opacity="0.55"/>
+            <path d="M 707 192 L 760 192 L 760 200 L 707 210 Z" fill="url(#glassReflect)" opacity="0.6"/>
 
-            <!-- Ventana lateral conductor (centro) -->
-            <path d="M 332 130 L 405 130 L 405 172 L 305 172 Q 308 145 332 130 Z"
-                  fill="url(#glassGrad)" stroke="#67E8F9" stroke-width="1.3" stroke-opacity="0.55"/>
+            <!-- Ventana lateral -->
+            <path d="M 642 188 L 700 188 L 700 217 L 615 217 Q 622 198 642 188 Z"
+                  fill="url(#glassGrad)" stroke="#67E8F9" stroke-width="1.2" stroke-opacity="0.55"/>
+            <line x1="702" y1="184" x2="702" y2="217" stroke="#0F172A" stroke-width="2.5"/>
 
-            <!-- Pilar central -->
-            <line x1="407" y1="125" x2="407" y2="172" stroke="#0F172A" stroke-width="3"/>
+            <!-- Linea marco ventanas -->
+            <line x1="610" y1="217" x2="816" y2="217" stroke="#0EA5E9" stroke-width="1.3" stroke-opacity="0.55"/>
 
-            <!-- Marco de ventanas -->
-            <line x1="300" y1="172" x2="540" y2="172" stroke="#0EA5E9" stroke-width="1.5" stroke-opacity="0.6"/>
+            <!-- Lineas de puertas -->
+            <line x1="665" y1="218" x2="665" y2="350" stroke="#0F172A" stroke-width="1.7" stroke-opacity="0.6"/>
+            <line x1="765" y1="218" x2="765" y2="350" stroke="#0F172A" stroke-width="1.7" stroke-opacity="0.6"/>
 
-            <!-- ============ PUERTAS Y DETALLES LATERALES ============ -->
-            <!-- Linea de puerta conductor -->
-            <line x1="358" y1="175" x2="358" y2="340" stroke="#0F172A" stroke-width="2" stroke-opacity="0.6"/>
-            <!-- Linea de puerta pasajero -->
-            <line x1="478" y1="175" x2="478" y2="340" stroke="#0F172A" stroke-width="2" stroke-opacity="0.6"/>
+            <!-- Linea cintura -->
+            <line x1="515" y1="285" x2="900" y2="285" stroke="#22D3EE" stroke-width="0.9" stroke-opacity="0.35"/>
 
-            <!-- Linea de cintura del carro -->
-            <line x1="155" y1="265" x2="600" y2="265" stroke="#22D3EE" stroke-width="1" stroke-opacity="0.4"/>
-
-            <!-- Manijas de puertas -->
-            <g fill="#0F172A" stroke="#67E8F9" stroke-opacity="0.7" stroke-width="0.8">
-              <rect x="335" y="232" width="22" height="6" rx="2"/>
-              <rect x="395" y="232" width="22" height="6" rx="2"/>
-              <rect x="455" y="232" width="22" height="6" rx="2"/>
+            <!-- Manijas -->
+            <g fill="#0F172A" stroke="#67E8F9" stroke-opacity="0.65" stroke-width="0.7">
+              <rect x="645" y="248" width="18" height="5" rx="2"/>
+              <rect x="700" y="248" width="18" height="5" rx="2"/>
+              <rect x="745" y="248" width="18" height="5" rx="2"/>
             </g>
 
-            <!-- ============ FRENTE DEL CARRO ============ -->
-            <!-- Faro delantero (lado derecho de la imagen) -->
-            <ellipse cx="690" cy="295" rx="26" ry="18" fill="url(#headLight)" opacity="0.95"/>
-            <ellipse cx="690" cy="295" rx="16" ry="11" fill="#FFFBEB" opacity="0.95"/>
-            <ellipse cx="685" cy="290" rx="6" ry="4" fill="#FFFFFF"/>
-            <!-- Marco faro -->
-            <ellipse cx="690" cy="295" rx="26" ry="18" fill="none" stroke="#0EA5E9" stroke-width="1.5" stroke-opacity="0.6"/>
+            <!-- Faro delantero -->
+            <ellipse cx="922" cy="306" rx="22" ry="15" fill="url(#headLight)" opacity="0.95"/>
+            <ellipse cx="922" cy="306" rx="13" ry="9" fill="#FFFBEB" opacity="0.95"/>
+            <ellipse cx="918" cy="302" rx="5" ry="3" fill="#FFFFFF"/>
+            <ellipse cx="922" cy="306" rx="22" ry="15" fill="none" stroke="#0EA5E9" stroke-width="1.3" stroke-opacity="0.6"/>
 
-            <!-- Parrilla frontal -->
-            <g transform="translate(660, 320)">
-              <rect width="55" height="22" rx="4" fill="#020617" stroke="#0EA5E9" stroke-opacity="0.55" stroke-width="1.3"/>
-              <line x1="5" y1="6"  x2="50" y2="6"  stroke="#22D3EE" stroke-opacity="0.5" stroke-width="0.8"/>
-              <line x1="5" y1="11" x2="50" y2="11" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="0.8"/>
-              <line x1="5" y1="16" x2="50" y2="16" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="0.8"/>
+            <!-- Parrilla -->
+            <g transform="translate(895, 325)">
+              <rect width="48" height="18" rx="3" fill="#020617" stroke="#0EA5E9" stroke-opacity="0.5" stroke-width="1"/>
+              <line x1="4" y1="5"  x2="44" y2="5"  stroke="#22D3EE" stroke-opacity="0.5" stroke-width="0.7"/>
+              <line x1="4" y1="9"  x2="44" y2="9"  stroke="#22D3EE" stroke-opacity="0.5" stroke-width="0.7"/>
+              <line x1="4" y1="13" x2="44" y2="13" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="0.7"/>
             </g>
 
             <!-- Placa frontal -->
-            <rect x="660" y="345" width="55" height="13" rx="2" fill="#FCD34D" stroke="#92400E" stroke-width="0.8"/>
-            <text x="687" y="355" text-anchor="middle" font-family="JetBrains Mono" font-size="8" font-weight="700" fill="#451A03">PAR-001</text>
+            <rect x="897" y="346" width="44" height="11" rx="2" fill="#FCD34D" stroke="#92400E" stroke-width="0.6"/>
+            <text x="919" y="354" text-anchor="middle" font-family="JetBrains Mono" font-size="7" font-weight="700" fill="#451A03">PAR-001</text>
 
-            <!-- ============ ATRAS DEL CARRO ============ -->
-            <!-- Stop / luz trasera -->
-            <ellipse cx="118" cy="295" rx="11" ry="22" fill="url(#tailLight)" opacity="0.9"/>
-            <ellipse cx="118" cy="295" rx="6" ry="14" fill="#FCA5A5"/>
+            <!-- Stop trasero -->
+            <ellipse cx="485" cy="306" rx="9" ry="18" fill="url(#tailLight)" opacity="0.9"/>
 
-            <!-- ============ PARABRISAS DETALLES ============ -->
-            <!-- Limpiaparabrisas (sobre parabrisas) -->
-            <g stroke="#0F172A" stroke-width="2" stroke-linecap="round" opacity="0.85">
-              <line x1="425" y1="170" x2="455" y2="135"/>
-              <circle cx="425" cy="170" r="3" fill="#1F2937"/>
-              <line x1="475" y1="170" x2="505" y2="135"/>
-              <circle cx="475" cy="170" r="3" fill="#1F2937"/>
+            <!-- Limpiaparabrisas -->
+            <g stroke="#0F172A" stroke-width="1.7" stroke-linecap="round" opacity="0.85">
+              <line x1="717" y1="215" x2="740" y2="190"/>
+              <circle cx="717" cy="215" r="2.5" fill="#1F2937"/>
+              <line x1="755" y1="215" x2="778" y2="190"/>
+              <circle cx="755" cy="215" r="2.5" fill="#1F2937"/>
             </g>
 
-            <!-- Espejo retrovisor exterior izquierdo -->
+            <!-- Espejo retrovisor -->
             <g>
-              <path d="M 305 168 L 285 162 L 280 175 L 302 178 Z" fill="#0F2742" stroke="#67E8F9" stroke-opacity="0.6" stroke-width="1.3"/>
-              <line x1="305" y1="172" x2="287" y2="170" stroke="#0F172A" stroke-width="1.2"/>
+              <path d="M 612 215 L 596 209 L 592 219 L 609 222 Z" fill="#0F2742" stroke="#67E8F9" stroke-opacity="0.6" stroke-width="1"/>
+              <line x1="612" y1="217" x2="598" y2="216" stroke="#0F172A" stroke-width="1"/>
             </g>
 
-            <!-- ============ RUEDAS DETALLADAS ============ -->
-            <!-- Rueda trasera (izquierda) -->
-            <g transform="translate(220, 380)">
-              <circle r="48" fill="url(#wheelGrad)" stroke="#1F2937" stroke-width="2"/>
-              <circle r="46" fill="none" stroke="#374151" stroke-width="1.5" opacity="0.7"/>
-              <circle r="28" fill="url(#rimGrad)" opacity="0.85"/>
-              <circle r="26" fill="#1F2937" opacity="0.5"/>
-              <!-- Rayos del rin -->
-              <g stroke="#E5E7EB" stroke-width="2.5" stroke-linecap="round" opacity="0.9">
-                <line x1="0" y1="-25" x2="0" y2="-10"/>
-                <line x1="0" y1="25"  x2="0" y2="10"/>
-                <line x1="-25" y1="0" x2="-10" y2="0"/>
-                <line x1="25" y1="0"  x2="10" y2="0"/>
-                <line x1="-18" y1="-18" x2="-7" y2="-7"/>
-                <line x1="18" y1="18"   x2="7" y2="7"/>
-                <line x1="-18" y1="18"  x2="-7" y2="7"/>
-                <line x1="18" y1="-18"  x2="7" y2="-7"/>
+            <!-- Ruedas -->
+            <g transform="translate(550, 385)">
+              <circle r="38" fill="url(#wheelGrad)" stroke="#1F2937" stroke-width="1.7"/>
+              <circle r="36" fill="none" stroke="#374151" stroke-width="1.2" opacity="0.7"/>
+              <circle r="22" fill="url(#rimGrad)" opacity="0.85"/>
+              <circle r="20" fill="#1F2937" opacity="0.5"/>
+              <g stroke="#E5E7EB" stroke-width="2" stroke-linecap="round" opacity="0.9">
+                <line x1="0" y1="-19" x2="0" y2="-8"/>
+                <line x1="0" y1="19"  x2="0" y2="8"/>
+                <line x1="-19" y1="0" x2="-8" y2="0"/>
+                <line x1="19" y1="0"  x2="8" y2="0"/>
+                <line x1="-14" y1="-14" x2="-6" y2="-6"/>
+                <line x1="14" y1="14"   x2="6" y2="6"/>
+                <line x1="-14" y1="14"  x2="-6" y2="6"/>
+                <line x1="14" y1="-14"  x2="6" y2="-6"/>
               </g>
-              <circle r="6" fill="#374151" stroke="#9CA3AF" stroke-width="1"/>
-              <circle r="3" fill="#9CA3AF"/>
+              <circle r="5" fill="#374151" stroke="#9CA3AF" stroke-width="0.8"/>
             </g>
-
-            <!-- Rueda delantera (derecha) -->
-            <g transform="translate(615, 380)">
-              <circle r="48" fill="url(#wheelGrad)" stroke="#1F2937" stroke-width="2"/>
-              <circle r="46" fill="none" stroke="#374151" stroke-width="1.5" opacity="0.7"/>
-              <circle r="28" fill="url(#rimGrad)" opacity="0.85"/>
-              <circle r="26" fill="#1F2937" opacity="0.5"/>
-              <g stroke="#E5E7EB" stroke-width="2.5" stroke-linecap="round" opacity="0.9">
-                <line x1="0" y1="-25" x2="0" y2="-10"/>
-                <line x1="0" y1="25"  x2="0" y2="10"/>
-                <line x1="-25" y1="0" x2="-10" y2="0"/>
-                <line x1="25" y1="0"  x2="10" y2="0"/>
-                <line x1="-18" y1="-18" x2="-7" y2="-7"/>
-                <line x1="18" y1="18"   x2="7" y2="7"/>
-                <line x1="-18" y1="18"  x2="-7" y2="7"/>
-                <line x1="18" y1="-18"  x2="-7" y2="-7"/>
+            <g transform="translate(870, 385)">
+              <circle r="38" fill="url(#wheelGrad)" stroke="#1F2937" stroke-width="1.7"/>
+              <circle r="36" fill="none" stroke="#374151" stroke-width="1.2" opacity="0.7"/>
+              <circle r="22" fill="url(#rimGrad)" opacity="0.85"/>
+              <circle r="20" fill="#1F2937" opacity="0.5"/>
+              <g stroke="#E5E7EB" stroke-width="2" stroke-linecap="round" opacity="0.9">
+                <line x1="0" y1="-19" x2="0" y2="-8"/>
+                <line x1="0" y1="19"  x2="0" y2="8"/>
+                <line x1="-19" y1="0" x2="-8" y2="0"/>
+                <line x1="19" y1="0"  x2="8" y2="0"/>
+                <line x1="-14" y1="-14" x2="-6" y2="-6"/>
+                <line x1="14" y1="14"   x2="6" y2="6"/>
+                <line x1="-14" y1="14"  x2="-6" y2="6"/>
+                <line x1="14" y1="-14"  x2="-6" y2="-6"/>
               </g>
-              <circle r="6" fill="#374151" stroke="#9CA3AF" stroke-width="1"/>
-              <circle r="3" fill="#9CA3AF"/>
-            </g>
-
-            <!-- ============ ETIQUETAS TECNICAS LATERAL ============ -->
-            <g font-family="JetBrains Mono" font-size="8" fill="#22D3EE" opacity="0.45">
-              <line x1="220" y1="445" x2="220" y2="435" stroke="#22D3EE" stroke-width="0.5"/>
-              <text x="195" y="455">LLANTA-01</text>
-              <line x1="615" y1="445" x2="615" y2="435" stroke="#22D3EE" stroke-width="0.5"/>
-              <text x="590" y="455">LLANTA-02</text>
+              <circle r="5" fill="#374151" stroke="#9CA3AF" stroke-width="0.8"/>
             </g>
 
             <!-- Logo PAR en la puerta -->
-            <g transform="translate(395, 300)">
-              <circle cx="0" cy="0" r="14" fill="#FFFFFF" opacity="0.9"/>
-              <text x="0" y="4" text-anchor="middle" font-family="Bebas Neue" font-size="13" font-weight="700" fill="#0F2742">PAR</text>
+            <g transform="translate(715, 318)">
+              <circle cx="0" cy="0" r="11" fill="#FFFFFF" opacity="0.92"/>
+              <text x="0" y="3.5" text-anchor="middle" font-family="Bebas Neue" font-size="11" font-weight="700" fill="#0F2742">PAR</text>
+            </g>
+
+            <!-- ============ ZONA-C: EMERGENCIA (lado derecho extremo) ============ -->
+            <!-- Cono naranja 1 -->
+            <g transform="translate(975, 415)">
+              <path d="M -10 0 L 0 -32 L 10 0 Z" fill="#F97316" stroke="#9A3412" stroke-width="0.9"/>
+              <rect x="-13" y="-2" width="26" height="5" fill="#0F172A"/>
+              <rect x="-10" y="-15" width="20" height="3" fill="#FED7AA"/>
+            </g>
+            <!-- Cono naranja 2 -->
+            <g transform="translate(1010, 425)">
+              <path d="M -8 0 L 0 -26 L 8 0 Z" fill="#F97316" stroke="#9A3412" stroke-width="0.9"/>
+              <rect x="-11" y="-2" width="22" height="4" fill="#0F172A"/>
+              <rect x="-8" y="-12" width="16" height="2.5" fill="#FED7AA"/>
+            </g>
+
+            <!-- Triangulo reflectivo en el piso -->
+            <g transform="translate(975, 360)">
+              <path d="M -16 14 L 0 -14 L 16 14 Z" fill="#0F172A" stroke="#EF4444" stroke-width="3"/>
+              <path d="M -11 10 L 0 -8 L 11 10 Z" fill="none" stroke="#FCA5A5" stroke-width="1.5"/>
+            </g>
+
+            <!-- Telefono de emergencia -->
+            <g transform="translate(990, 250)">
+              <rect x="-22" y="-30" width="44" height="55" rx="6" fill="#0F172A" stroke="#22D3EE" stroke-opacity="0.6" stroke-width="1.3"/>
+              <rect x="-18" y="-26" width="36" height="40" rx="2" fill="#0C4A6E"/>
+              <text x="0" y="-6" text-anchor="middle" font-family="Bebas Neue" font-size="20" fill="#FCD34D" font-weight="700">123</text>
+              <text x="0" y="8" text-anchor="middle" font-family="JetBrains Mono" font-size="5.5" fill="#67E8F9">EMERGENCIA</text>
+              <!-- Boton -->
+              <circle cx="0" cy="19" r="3" fill="#EF4444"/>
+            </g>
+
+            <!-- ============ ZONA EXTRA: MEDIOS PROHIBIDOS (esquina superior derecha) ============ -->
+            <g transform="translate(1010, 130)">
+              <!-- Marco prohibido -->
+              <circle cx="0" cy="0" r="34" fill="rgba(239,68,68,0.05)" stroke="#EF4444" stroke-width="3"/>
+              <!-- Linea diagonal de prohibido -->
+              <line x1="-24" y1="24" x2="24" y2="-24" stroke="#EF4444" stroke-width="3.5"/>
+              <!-- Iconos mini (moto + bici + patineta) -->
+              <g transform="translate(-15, -6) scale(0.9)" fill="#E2E8F0" opacity="0.85">
+                <!-- Moto simplificada -->
+                <circle cx="3" cy="6" r="3.2" fill="none" stroke="#E2E8F0" stroke-width="1.2"/>
+                <circle cx="13" cy="6" r="3.2" fill="none" stroke="#E2E8F0" stroke-width="1.2"/>
+                <path d="M 4 6 L 9 0 L 12 6" fill="none" stroke="#E2E8F0" stroke-width="1.2"/>
+              </g>
+              <text x="0" y="48" text-anchor="middle" font-family="JetBrains Mono" font-size="7" fill="#EF4444" font-weight="700">PROHIBIDO</text>
             </g>
 
           </svg>
@@ -1183,7 +1336,7 @@
               FINALIZAR INSPECCION
             </span>
           </button>
-          <p class="text-[10px] text-slate-500 mt-1.5" id="btn-finalizar-hint">Completa los 10 puntos para finalizar</p>
+          <p class="text-[10px] text-slate-500 mt-1.5" id="btn-finalizar-hint">Completa los 13 puntos para finalizar</p>
         </div>
       </div>
 
@@ -1320,26 +1473,50 @@
       <div class="space-y-3 text-sm text-slate-300 leading-relaxed">
         <div class="flex gap-3 items-start">
           <span class="mono-font text-amber-400 font-bold flex-shrink-0">01</span>
-          <p>Veras un <strong class="text-white">vehiculo de inspeccion</strong> con <strong class="text-amber-400">10 puntos amarillos pulsantes</strong> repartidos sobre sus componentes criticos PESV.</p>
+          <p>Veras un <strong class="text-white">escenario PESV completo</strong> con <strong class="text-amber-400">13 puntos clasificados por color</strong> que cubren las tres zonas del Plan: <strong>peaton</strong>, <strong>vehiculo</strong> y <strong>emergencia</strong>.</p>
         </div>
         <div class="flex gap-3 items-start">
           <span class="mono-font text-amber-400 font-bold flex-shrink-0">02</span>
-          <p>Haz <strong class="text-white">click en cada punto amarillo</strong> para abrir la pregunta asociada al componente.</p>
+          <p>Cada color identifica una categoria del actor vial:</p>
         </div>
+
+        <div class="ml-9 grid grid-cols-2 gap-2 text-xs">
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-amber-500/10 border border-amber-500/30">
+            <span class="inline-block w-4 h-4 rounded-full" style="background: linear-gradient(135deg, #FBBF24, #F59E0B); box-shadow: 0 0 8px rgba(245,158,11,0.7);"></span>
+            <span class="text-amber-300 mono-font uppercase tracking-wider text-[10px]">Conductor</span>
+          </div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30">
+            <span class="inline-block w-4 h-4 rounded-full" style="background: linear-gradient(135deg, #22D3EE, #0891B2); box-shadow: 0 0 8px rgba(34,211,238,0.7);"></span>
+            <span class="text-cyan-300 mono-font uppercase tracking-wider text-[10px]">Peaton</span>
+          </div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-red-500/10 border border-red-500/30">
+            <span class="inline-block w-4 h-4 rounded-full" style="background: linear-gradient(135deg, #F87171, #DC2626); box-shadow: 0 0 8px rgba(239,68,68,0.7);"></span>
+            <span class="text-red-300 mono-font uppercase tracking-wider text-[10px]">Emergencia</span>
+          </div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-purple-500/10 border border-purple-500/30">
+            <span class="inline-block w-4 h-4 rounded-full" style="background: linear-gradient(135deg, #C084FC, #9333EA); box-shadow: 0 0 8px rgba(192,132,252,0.7);"></span>
+            <span class="text-purple-300 mono-font uppercase tracking-wider text-[10px]">Otros Actores</span>
+          </div>
+        </div>
+
         <div class="flex gap-3 items-start">
           <span class="mono-font text-amber-400 font-bold flex-shrink-0">03</span>
-          <p>Cada respuesta <strong class="text-emerald-400">correcta</strong> suma <strong>+10 puntos</strong>. Cada respuesta <strong class="text-red-400">incorrecta</strong> resta <strong>1 vida</strong> y suma <strong>+10 segundos</strong> de penalizacion.</p>
+          <p>Haz click en cada punto pulsante para responder la pregunta asociada.</p>
         </div>
         <div class="flex gap-3 items-start">
           <span class="mono-font text-amber-400 font-bold flex-shrink-0">04</span>
-          <p>Tienes <strong class="text-red-400">3 vidas</strong>. Si las pierdes todas quedas <strong>descalificado</strong>.</p>
+          <p>Cada respuesta <strong class="text-emerald-400">correcta</strong> suma <strong>+1 punto</strong>. Cada respuesta <strong class="text-red-400">incorrecta</strong> resta <strong>1 vida</strong> y suma <strong>+10 segundos</strong>.</p>
         </div>
         <div class="flex gap-3 items-start">
           <span class="mono-font text-amber-400 font-bold flex-shrink-0">05</span>
-          <p>Completa los <strong class="text-white">10 puntos</strong> y haz click en <strong class="text-cyan-400">FINALIZAR</strong> para registrar tu marca. Apruebas con <strong>7 o mas aciertos</strong>.</p>
+          <p>Tienes <strong class="text-red-400">3 vidas</strong>. Si las pierdes todas quedas <strong>descalificado</strong>.</p>
         </div>
         <div class="flex gap-3 items-start">
           <span class="mono-font text-amber-400 font-bold flex-shrink-0">06</span>
+          <p>Completa los <strong class="text-white">13 puntos</strong> y haz click en <strong class="text-cyan-400">FINALIZAR</strong> para registrar tu marca. Apruebas con <strong>9 o mas aciertos sobre 13</strong>.</p>
+        </div>
+        <div class="flex gap-3 items-start">
+          <span class="mono-font text-amber-400 font-bold flex-shrink-0">07</span>
           <p>Todos los jugadores compiten en tiempo real. El ranking se actualiza cada 3 segundos.</p>
         </div>
       </div>
@@ -1376,7 +1553,7 @@
         </div>
         <div class="flex-grow">
           <div class="flex items-center gap-2 mb-1">
-            <span class="pill pill-amber" id="modal-tag">Punto 1 de 10</span>
+            <span class="pill pill-amber" id="modal-tag">Punto 1 de 13</span>
             <span class="text-[10px] mono-font text-cyan-400 uppercase tracking-wider" id="modal-component">COMPONENTE</span>
           </div>
           <h3 id="modal-title" class="display-font text-2xl text-white tracking-wide leading-tight">TITULO</h3>
@@ -1452,56 +1629,44 @@
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwoI4v4_k22UnABJIgJOcIs_l6JYzwn7sEQRKJs8wrZtKXw6EnHIG3f5kNBzIUDM8Ob6A/exec"; // <-- PEGAR URL AQUI
 
 // ============================================================
-//  CATALOGO DE 10 PREGUNTAS PESV - PUNTOS CRITICOS DEL VEHICULO
-//  Coordenadas (left, top) en porcentaje sobre el stage del coche
+//  CATALOGO DE 12 PREGUNTAS PESV - PUNTOS CRITICOS EN 3 ZONAS
+//  Categorias: "conductor" (amarillo), "peaton" (cyan), "emergencia" (verde-rojo)
+//  Coordenadas (left, top) en porcentaje sobre el viewBox 1100x520
 // ============================================================
 const PUNTOS_CRITICOS = [
+  // ============== ZONA-B: CONDUCTOR / VEHICULO ==============
   {
-    id: 1, key: "luces", componente: "Faros Delanteros",
+    id: 1, key: "luces", componente: "Faros Delanteros", categoria: "conductor",
     titulo: "SISTEMA DE ILUMINACION",
-    pos: { left: 86, top: 61 },
+    pos: { left: 83.5, top: 59 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.3 4.5 3 5.7V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.3c1.7-1.2 3-3.3 3-5.7a7 7 0 0 0-7-7zM9 21h6M10 18h4"/></svg>',
-    pregunta: "Segun el PESV, ¿con que frecuencia debes verificar el correcto funcionamiento de luces altas, bajas, direccionales y de freno antes de iniciar la operacion?",
+    pregunta: "Segun el PESV, parte de la revision preoperacional incluye verificar luces, frenos, llantas y kit de emergencias. ¿Con que frecuencia debe hacerse esta inspeccion?",
     opciones: [
       { txt: "Solo cuando se enciende un testigo en el tablero", correcta: false },
       { txt: "Una vez por semana en la oficina", correcta: false },
-      { txt: "Diariamente en la inspeccion preoperacional, antes de iniciar la ruta", correcta: true },
+      { txt: "Diariamente, antes de cada salida o jornada", correcta: true },
       { txt: "Solo cuando el vehiculo va al taller", correcta: false }
     ],
-    explicacion: "La inspeccion preoperacional diaria es obligatoria y debe registrarse en la lista de chequeo antes de cada jornada."
+    explicacion: "La Resolucion 40592 (responsabilidades del conductor) y el PESV exigen revision preoperacional ANTES DE CADA SALIDA: frenos, llantas, luces, kit de emergencias y carretera."
   },
   {
-    id: 2, key: "llanta-delantera", componente: "Llanta Delantera",
-    titulo: "PROFUNDIDAD DE LABRADO",
-    pos: { left: 27, top: 81 },
-    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="3" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="21"/><line x1="3" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="21" y2="12"/></svg>',
-    pregunta: "¿Cual es la profundidad MINIMA legal del labrado de las llantas en Colombia, medida en cualquier punto de la banda de rodadura?",
-    opciones: [
-      { txt: "0.5 mm", correcta: false },
-      { txt: "1.0 mm", correcta: false },
-      { txt: "1.6 mm", correcta: true },
-      { txt: "3.0 mm", correcta: false }
-    ],
-    explicacion: "La normativa colombiana establece 1.6 mm como minimo. Por debajo de ese valor, la llanta debe ser cambiada inmediatamente."
-  },
-  {
-    id: 3, key: "llanta-trasera", componente: "Sistema de Frenos",
+    id: 2, key: "frenos", componente: "Sistema de Frenos", categoria: "conductor",
     titulo: "CONTROL DE FRENADO",
-    pos: { left: 77, top: 81 },
+    pos: { left: 50, top: 74 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><path d="M3 12a9 9 0 0 1 18 0"/></svg>',
-    pregunta: "Durante el preoperacional notas que al frenar el vehiculo tira ligeramente hacia un lado. ¿Cual es la accion correcta segun el PESV?",
+    pregunta: "Durante el preoperacional notas que al frenar el vehiculo tira hacia un lado. ¿Cual es la accion correcta segun el PESV?",
     opciones: [
       { txt: "Continuar la ruta y reportar al final del dia", correcta: false },
       { txt: "Detener la operacion, reportar inmediatamente y no movilizar el vehiculo hasta su revision", correcta: true },
       { txt: "Manejar mas despacio y compensar con el volante", correcta: false },
       { txt: "Esperar a que el problema empeore para justificar el taller", correcta: false }
     ],
-    explicacion: "Cualquier anomalia en el sistema de frenos es CRITICA. La ruta debe detenerse inmediatamente y reportarse al supervisor."
+    explicacion: "Cualquier anomalia en el sistema de frenos es CRITICA. La operacion debe detenerse inmediatamente y reportarse al supervisor / responsable de SST."
   },
   {
-    id: 4, key: "cinturon", componente: "Cinturon de Seguridad",
+    id: 3, key: "cinturon", componente: "Cinturon de Seguridad", categoria: "conductor",
     titulo: "RETENCION OBLIGATORIA",
-    pos: { left: 55, top: 58 },
+    pos: { left: 64, top: 56 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M20 12c0 5-3 8-8 8s-8-3-8-8 3-8 8-8 8 3 8 8z"/><path d="M9 9l6 6M15 9l-6 6"/></svg>',
     pregunta: "¿En que casos NO es obligatorio el uso del cinturon de seguridad para los ocupantes del vehiculo?",
     opciones: [
@@ -1510,12 +1675,12 @@ const PUNTOS_CRITICOS = [
       { txt: "Para los pasajeros que van en el asiento trasero", correcta: false },
       { txt: "Cuando el recorrido es de menos de 5 minutos", correcta: false }
     ],
-    explicacion: "Ley 769 de 2002: el cinturon es de uso obligatorio para todos los ocupantes, en todo momento, sin excepcion."
+    explicacion: "Resolucion 40592 - Responsabilidades del conductor: usar SIEMPRE el cinturon de seguridad y EXIGIR su uso a los pasajeros, sin excepcion."
   },
   {
-    id: 5, key: "espejo", componente: "Espejos Retrovisores",
+    id: 4, key: "espejo", componente: "Espejos Retrovisores", categoria: "conductor",
     titulo: "ELIMINACION DE PUNTO CIEGO",
-    pos: { left: 36, top: 36 },
+    pos: { left: 55, top: 43 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>',
     pregunta: "El \"punto ciego\" del vehiculo se define como:",
     opciones: [
@@ -1524,40 +1689,26 @@ const PUNTOS_CRITICOS = [
       { txt: "La zona detras del vehiculo durante la noche", correcta: false },
       { txt: "Cualquier zona con niebla o lluvia intensa", correcta: false }
     ],
-    explicacion: "El punto ciego es el area no cubierta por espejos. Antes de cambiar de carril es obligatorio girar la cabeza para verificarlo."
+    explicacion: "El punto ciego es el area no cubierta por espejos. Antes de cambiar de carril es obligatorio girar la cabeza para verificarlo y proteger a peatones y otros vehiculos."
   },
   {
-    id: 6, key: "botiquin", componente: "Botiquin Vehicular",
-    titulo: "KIT DE PRIMEROS AUXILIOS",
-    pos: { left: 18, top: 62 },
-    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>',
-    pregunta: "¿Cuales son los elementos MINIMOS que debe contener el botiquin de primeros auxilios de un vehiculo de servicio?",
+    id: 5, key: "alcohol", componente: "Alcohol y Sustancias", categoria: "conductor",
+    titulo: "CONDUCCION RESPONSABLE",
+    pos: { left: 75, top: 56 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M8 2h8l-1 4H9z"/><path d="M9 6l-2 14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2L15 6"/><line x1="4" y1="4" x2="20" y2="20"/></svg>',
+    pregunta: "Segun las responsabilidades del conductor PESV, ¿que esta prohibido ANTES Y DURANTE la conduccion?",
     opciones: [
-      { txt: "Solo gasas y curitas", correcta: false },
-      { txt: "Gasas, vendas, antisepticos, guantes desechables y tijeras", correcta: true },
-      { txt: "Medicamentos para el dolor y la fiebre", correcta: false },
-      { txt: "Equipo de sutura y bisturi", correcta: false }
+      { txt: "Comer dentro del vehiculo", correcta: false },
+      { txt: "Consumir alcohol o sustancias psicoactivas", correcta: true },
+      { txt: "Escuchar musica suave a bajo volumen", correcta: false },
+      { txt: "Conducir con aire acondicionado encendido", correcta: false }
     ],
-    explicacion: "El botiquin basico segun el PESV incluye material de curacion. NUNCA debe contener medicamentos sin prescripcion."
+    explicacion: "Resolucion 40592: abstenerse de consumir alcohol o sustancias psicoactivas antes y durante la conduccion. El incumplimiento conlleva sanciones disciplinarias y legales."
   },
   {
-    id: 7, key: "extintor", componente: "Extintor de Incendios",
-    titulo: "PREVENCION DE INCENDIO",
-    pos: { left: 67, top: 64 },
-    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M9 5h6v3h-6z"/><path d="M10 8v13a2 2 0 0 0 2 2 2 2 0 0 0 2-2V8"/><path d="M7 5l2-3M17 5l-2-3"/></svg>',
-    pregunta: "¿Que tipo y capacidad de extintor debe portar un vehiculo de servicio segun la normativa colombiana?",
-    opciones: [
-      { txt: "Cualquier extintor pequeño en buen estado", correcta: false },
-      { txt: "Multiproposito ABC de minimo 5 libras, con carga vigente y sello visible", correcta: true },
-      { txt: "Tipo agua de 2 litros", correcta: false },
-      { txt: "Tipo CO2 de 20 libras", correcta: false }
-    ],
-    explicacion: "Resolucion 1565 / Resolucion 40595: extintor ABC de 5 lb minimo, con carga vigente y manometro en zona verde."
-  },
-  {
-    id: 8, key: "documentos", componente: "Documentacion Legal",
+    id: 6, key: "documentos", componente: "Documentacion Legal", categoria: "conductor",
     titulo: "DOCUMENTOS DE OPERACION",
-    pos: { left: 47, top: 27 },
+    pos: { left: 66, top: 38 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>',
     pregunta: "¿Que documentos debe portar SIEMPRE el conductor durante la operacion del vehiculo?",
     opciones: [
@@ -1566,26 +1717,12 @@ const PUNTOS_CRITICOS = [
       { txt: "Solo el SOAT y la cedula", correcta: false },
       { txt: "Una fotocopia de la licencia es suficiente", correcta: false }
     ],
-    explicacion: "Los 4 documentos son obligatorios y deben presentarse originales en cualquier control de transito."
+    explicacion: "Los 4 documentos son obligatorios: licencia vigente acorde al tipo de vehiculo, SOAT, revision tecnico-mecanica y tarjeta de propiedad. Originales en cualquier control."
   },
   {
-    id: 9, key: "triangulos", componente: "Señales de Emergencia",
-    titulo: "TRIANGULOS REFLECTIVOS",
-    pos: { left: 8, top: 84 },
-    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
-    pregunta: "Si el vehiculo queda varado en una via abierta, ¿a que distancia se deben ubicar los triangulos reflectivos?",
-    opciones: [
-      { txt: "10 metros adelante y 10 metros atras", correcta: false },
-      { txt: "30 metros adelante y 30 metros atras del vehiculo", correcta: true },
-      { txt: "Solo es necesario uno detras del vehiculo", correcta: false },
-      { txt: "100 metros en linea recta detras del vehiculo", correcta: false }
-    ],
-    explicacion: "La norma exige 30 m adelante y 30 m atras para alertar a otros conductores a tiempo. En curva, antes de la curva."
-  },
-  {
-    id: 10, key: "limpia", componente: "Limpiaparabrisas",
+    id: 7, key: "limpia", componente: "Limpiaparabrisas", categoria: "conductor",
     titulo: "VISIBILIDAD EN MARCHA",
-    pos: { left: 60, top: 32 },
+    pos: { left: 70, top: 36 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M2 12c2-4 6-6 10-6s8 2 10 6"/><line x1="6" y1="20" x2="14" y2="6"/><circle cx="6" cy="20" r="1.5"/></svg>',
     pregunta: "Durante la inspeccion preoperacional detectas que los limpiaparabrisas dejan rayas y no limpian bien. ¿Que debes hacer?",
     opciones: [
@@ -1595,6 +1732,96 @@ const PUNTOS_CRITICOS = [
       { txt: "Cambiar el orden de las plumillas (izquierda por derecha)", correcta: false }
     ],
     explicacion: "La visibilidad es critica. Las plumillas deben cambiarse cada 6-12 meses y reportarse cualquier deficiencia en el preoperacional."
+  },
+
+  // ============== ZONA-C: EMERGENCIA ==============
+  {
+    id: 8, key: "botiquin", componente: "Botiquin / Kit Emergencias", categoria: "emergencia",
+    titulo: "KIT DE PRIMEROS AUXILIOS",
+    pos: { left: 44, top: 68 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>',
+    pregunta: "¿Cuales son los elementos MINIMOS que debe contener el botiquin de primeros auxilios del vehiculo?",
+    opciones: [
+      { txt: "Solo gasas y curitas", correcta: false },
+      { txt: "Gasas, vendas, antisepticos, guantes desechables y tijeras", correcta: true },
+      { txt: "Medicamentos para el dolor y la fiebre", correcta: false },
+      { txt: "Equipo de sutura y bisturi", correcta: false }
+    ],
+    explicacion: "El botiquin basico incluye material de curacion: gasas, vendas, antisepticos, guantes, tijeras. NUNCA debe contener medicamentos sin prescripcion."
+  },
+  {
+    id: 9, key: "triangulos", componente: "Triangulos Reflectivos", categoria: "emergencia",
+    titulo: "SEÑALES DE EMERGENCIA",
+    pos: { left: 88.5, top: 70 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+    pregunta: "Si el vehiculo queda varado en una via abierta, ¿a que distancia se deben ubicar los triangulos reflectivos? (paso PROTEGER del protocolo PAS)",
+    opciones: [
+      { txt: "10 metros adelante y 10 metros atras", correcta: false },
+      { txt: "30 metros adelante y 30 metros atras del vehiculo", correcta: true },
+      { txt: "Solo es necesario uno detras del vehiculo", correcta: false },
+      { txt: "100 metros en linea recta detras del vehiculo", correcta: false }
+    ],
+    explicacion: "Protocolo PAS - paso 1 PROTEGER: triangulos a MINIMO 30 m adelante y 30 m atras. En curva, ubicarlos ANTES de la curva para alertar a tiempo."
+  },
+  {
+    id: 10, key: "linea123", componente: "Linea Unica 123", categoria: "emergencia",
+    titulo: "PROTOCOLO PAS · AVISAR",
+    pos: { left: 90, top: 48 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
+    pregunta: "Ocurre un accidente de transito en la via. Despues de PROTEGER la zona, ¿que numero debes llamar de inmediato? (paso AVISAR del protocolo PAS)",
+    opciones: [
+      { txt: "119 - Bomberos", correcta: false },
+      { txt: "123 - Linea Unica de Emergencias", correcta: true },
+      { txt: "132 - Cruz Roja", correcta: false },
+      { txt: "#767 - Policia de Carreteras", correcta: false }
+    ],
+    explicacion: "Protocolo PAS paso 2 AVISAR: marcar 123 (Linea Unica de Emergencias), informar ubicacion exacta y gravedad, solicitar ambulancia y Policia de Transito. Lineas adicionales: 119 Bomberos, 132 Cruz Roja, #767 Policia de Carreteras."
+  },
+
+  // ============== ZONA-A: PEATON ==============
+  {
+    id: 11, key: "paso-peatonal", componente: "Paso Peatonal", categoria: "peaton",
+    titulo: "DONDE CRUZAR LA VIA",
+    pos: { left: 22, top: 85 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M6 22V8"/><path d="M18 22V8"/><line x1="6" y1="22" x2="18" y2="22"/><line x1="6" y1="14" x2="18" y2="14"/><line x1="6" y1="18" x2="18" y2="18"/></svg>',
+    pregunta: "Como peaton en actividades laborales, ¿cual es la forma correcta de cruzar la via?",
+    opciones: [
+      { txt: "Cruzar por donde sea mas corto, entre vehiculos estacionados", correcta: false },
+      { txt: "Siempre por los pasos peatonales demarcados y respetando los semaforos", correcta: true },
+      { txt: "Solo es necesario mirar a un lado antes de cruzar", correcta: false },
+      { txt: "Correr para cruzar mas rapido", correcta: false }
+    ],
+    explicacion: "El Peaton Seguro: cruzar SIEMPRE por las zonas demarcadas, respetar semaforos. NUNCA cruzar entre vehiculos estacionados, ya que reduce la visibilidad del conductor."
+  },
+  {
+    id: 12, key: "celular-peaton", componente: "Distraccion del Peaton", categoria: "peaton",
+    titulo: "ATENCION PLENA AL CRUZAR",
+    pos: { left: 20, top: 62 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/><line x1="3" y1="3" x2="21" y2="21"/></svg>',
+    pregunta: "Como peaton, antes de cruzar la via, debes:",
+    opciones: [
+      { txt: "Caminar mirando el celular o con audifonos puestos", correcta: false },
+      { txt: "Asumir que los conductores siempre te cederan el paso", correcta: false },
+      { txt: "Evitar distracciones (celular, audifonos), hacer contacto visual con los conductores y mirar a ambos lados", correcta: true },
+      { txt: "Cruzar de espaldas a los vehiculos", correcta: false }
+    ],
+    explicacion: "El Peaton Seguro: nada de celular ni audifonos al cruzar la via ni en transporte publico. Contacto visual con los conductores. La atencion plena salva vidas."
+  },
+
+  // ============== ZONA EXTRA: OTROS ACTORES VIALES ==============
+  {
+    id: 13, key: "medios-prohibidos", componente: "Medios Prohibidos", categoria: "otros",
+    titulo: "VEHICULOS NO AUTORIZADOS",
+    pos: { left: 91.8, top: 25 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/></svg>',
+    pregunta: "Segun la politica de PAR Servicios, ¿que medios de transporte estan PROHIBIDOS para actividades laborales y desplazamientos en representacion de la empresa?",
+    opciones: [
+      { txt: "Solo motocicletas", correcta: false },
+      { txt: "Bicicletas, patinetas (electricas o mecanicas) y motocicletas", correcta: true },
+      { txt: "Solo bicicletas y patinetas", correcta: false },
+      { txt: "Ninguno esta prohibido si el colaborador firma un descargo", correcta: false }
+    ],
+    explicacion: "Politica PAR: queda estrictamente PROHIBIDO usar bicicletas, patinetas electricas o mecanicas y motocicletas para actividades laborales. Tambien prohibido el uso de aplicaciones de transporte con esos vehiculos. Su incumplimiento puede acarrear sanciones disciplinarias."
   }
 ];
 
@@ -2119,11 +2346,12 @@ function renderHotspots() {
   PUNTOS_CRITICOS.forEach((p, idx) => {
     const hs = document.createElement("button");
     hs.type = "button";
-    hs.className = "hotspot anim-slide-up";
+    hs.className = "hotspot anim-slide-up cat-" + (p.categoria || "conductor");
     hs.style.left = "calc(" + p.pos.left + "% - 21px)";
     hs.style.top  = "calc(" + p.pos.top  + "% - 21px)";
-    hs.style.animationDelay = (idx * 70) + "ms";
+    hs.style.animationDelay = (idx * 60) + "ms";
     hs.dataset.key = p.key;
+    hs.dataset.cat = p.categoria || "conductor";
     hs.title = p.componente;
     hs.setAttribute("aria-label", "Punto " + p.id + ": " + p.componente);
     hs.innerHTML =
@@ -2163,7 +2391,7 @@ function actualizarStatsJuego() {
   const tStr = mm + ":" + ss;
 
   const completados = STATE.player.puntosCompletados.length;
-  const progresoStr = completados + "/10";
+  const progresoStr = completados + "/" + PUNTOS_CRITICOS.length;
   const pen = "+" + STATE.player.penalizaciones + "s";
   const vidaStr = STATE.player.vidas + "/3";
 
@@ -2181,10 +2409,10 @@ function actualizarStatsJuego() {
   // Habilitar/deshabilitar boton finalizar
   const btnFin = document.getElementById("btn-finalizar");
   const hintFin = document.getElementById("btn-finalizar-hint");
-  if (completados >= 10) {
+  if (completados >= PUNTOS_CRITICOS.length) {
     btnFin.disabled = false;
     btnFin.classList.add("anim-blink");
-    hintFin.textContent = "Has completado los 10 puntos - finaliza para guardar tu marca";
+    hintFin.textContent = "Has completado los 13 puntos - finaliza para guardar tu marca";
   }
 
   // Actualizar progreso al server cada cierto tiempo (cada 5s aprox)
@@ -2214,7 +2442,7 @@ function abrirPregunta(punto) {
   STATE.tiempoPreguntaInicio = Date.now();
 
   document.getElementById("modal-icon").innerHTML = punto.icon;
-  document.getElementById("modal-tag").textContent = "Punto " + punto.id + " de 10";
+  document.getElementById("modal-tag").textContent = "Punto " + punto.id + " de " + PUNTOS_CRITICOS.length;
   document.getElementById("modal-component").textContent = punto.componente.toUpperCase();
   document.getElementById("modal-title").textContent = punto.titulo;
   document.getElementById("modal-question-text").textContent = punto.pregunta;
@@ -2362,10 +2590,10 @@ async function finalizarJuego(descalificado = false) {
 
   // Renderizar resultados
   const aciertos = STATE.player.puntaje;
-  const aprobado = !descalificado && aciertos >= 7;
+  const aprobado = !descalificado && aciertos >= 9;
   const totalConPen = tiempoFinal + STATE.player.penalizaciones;
 
-  document.getElementById("result-score").textContent = aciertos + "/10";
+  document.getElementById("result-score").textContent = aciertos + "/" + PUNTOS_CRITICOS.length;
   document.getElementById("result-lives").textContent = STATE.player.vidas + "/3";
   document.getElementById("result-pen").textContent   = STATE.player.penalizaciones + "s";
 
@@ -2573,7 +2801,7 @@ function reiniciarJuego() {
   document.getElementById("header-stats").classList.remove("flex");
   document.getElementById("btn-finalizar").disabled = true;
   document.getElementById("btn-finalizar").classList.remove("anim-blink");
-  document.getElementById("btn-finalizar-hint").textContent = "Completa los 10 puntos para finalizar";
+  document.getElementById("btn-finalizar-hint").textContent = "Completa los 13 puntos para finalizar";
   mostrarPantalla("screen-access");
 }
 
