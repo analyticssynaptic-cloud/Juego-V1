@@ -1,0 +1,2305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ruta Segura PESV · Centro de Control · PAR Servicios</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Tipografias profesionales -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg-deep:      #04060B;
+    --bg-panel:     #0A1220;
+    --bg-card:      #0F1A2E;
+    --bg-elevated:  #142340;
+    --border-soft:  rgba(120, 160, 220, 0.10);
+    --border-mid:   rgba(120, 160, 220, 0.22);
+    --border-hot:   rgba(120, 160, 220, 0.45);
+
+    --txt-primary:   #E8EEF7;
+    --txt-secondary: #98A8C0;
+    --txt-muted:     #5A6B85;
+
+    --acc-blue:    #2D7FF9;
+    --acc-blue-2:  #0066CC;
+    --acc-cyan:    #22D3EE;
+    --acc-amber:   #F59E0B;
+    --acc-green:   #10B981;
+    --acc-red:     #EF4444;
+    --acc-violet:  #8B5CF6;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { background: var(--bg-deep); color: var(--txt-primary); }
+  body {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 0%, rgba(45, 127, 249, 0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(245, 158, 11, 0.06) 0%, transparent 60%),
+      var(--bg-deep);
+  }
+
+  /* Fondo tipo blueprint tecnico */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(120, 160, 220, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(120, 160, 220, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 90%);
+  }
+
+  /* Ruido sutil */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    pointer-events: none;
+    opacity: 0.03;
+    z-index: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+  }
+
+  .display-font { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; }
+  .mono-font    { font-family: 'JetBrains Mono', monospace; }
+
+  /* Cards y paneles */
+  .panel {
+    background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-panel) 100%);
+    border: 1px solid var(--border-soft);
+    border-radius: 18px;
+    position: relative;
+  }
+  .panel-elevated {
+    background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-card) 100%);
+    border: 1px solid var(--border-mid);
+    border-radius: 18px;
+  }
+
+  /* Esquinas tecnicas decorativas */
+  .corner-marks::before,
+  .corner-marks::after,
+  .corner-marks > .cm-tl,
+  .corner-marks > .cm-tr {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--acc-amber);
+    opacity: 0.55;
+  }
+  .corner-marks::before { top: -1px; left: -1px;  border-right: none; border-bottom: none; }
+  .corner-marks::after  { bottom: -1px; right: -1px; border-left: none;  border-top: none; }
+  .corner-marks > .cm-tl{ top: -1px; right: -1px;  border-left: none;  border-bottom: none; }
+  .corner-marks > .cm-tr{ bottom: -1px; left: -1px; border-right: none; border-top: none; }
+
+  /* Botones */
+  .btn-primary {
+    background: linear-gradient(135deg, var(--acc-blue) 0%, var(--acc-blue-2) 100%);
+    color: white; font-weight: 700;
+    border-radius: 12px;
+    padding: 14px 22px;
+    transition: all .2s ease;
+    box-shadow: 0 8px 24px -8px rgba(45, 127, 249, 0.6), inset 0 1px 0 rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.08);
+    text-transform: uppercase; letter-spacing: 0.06em; font-size: 13px;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 28px -8px rgba(45, 127, 249, 0.85), inset 0 1px 0 rgba(255,255,255,0.2); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .btn-ghost {
+    background: rgba(120, 160, 220, 0.06);
+    border: 1px solid var(--border-mid);
+    color: var(--txt-primary);
+    border-radius: 12px;
+    padding: 13px 22px;
+    transition: all .2s ease;
+    font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em; font-size: 13px;
+  }
+  .btn-ghost:hover { background: rgba(120, 160, 220, 0.12); border-color: var(--border-hot); }
+
+  .btn-danger {
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    color: white; font-weight: 700;
+    border-radius: 12px;
+    padding: 12px 18px;
+    box-shadow: 0 6px 20px -6px rgba(239, 68, 68, 0.6);
+  }
+
+  .btn-success {
+    background: linear-gradient(135deg, var(--acc-green) 0%, #059669 100%);
+    color: white; font-weight: 700;
+    border-radius: 12px;
+    padding: 14px 22px;
+    box-shadow: 0 8px 24px -8px rgba(16, 185, 129, 0.55);
+    text-transform: uppercase; letter-spacing: 0.06em; font-size: 13px;
+  }
+
+  /* Inputs */
+  .input-field {
+    background: var(--bg-deep);
+    border: 1px solid var(--border-mid);
+    color: var(--txt-primary);
+    border-radius: 10px;
+    padding: 13px 16px;
+    width: 100%;
+    font-family: 'Outfit', sans-serif;
+    transition: all .2s;
+  }
+  .input-field:focus {
+    outline: none;
+    border-color: var(--acc-blue);
+    box-shadow: 0 0 0 3px rgba(45, 127, 249, 0.18);
+  }
+  .input-field::placeholder { color: var(--txt-muted); }
+
+  .label-tag {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 10.5px;
+    color: var(--txt-secondary);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  /* Animaciones */
+  @keyframes pulseRing {
+    0%   { transform: scale(0.85); opacity: 0.85; }
+    100% { transform: scale(2.2);  opacity: 0; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.3; }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scanLine {
+    0%   { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+
+  .anim-blink { animation: blink 1.8s infinite ease-in-out; }
+  .anim-float { animation: float 4s infinite ease-in-out; }
+  .anim-slide-up { animation: slideUp .4s ease-out; }
+
+  /* Hotspots interactivos */
+  .hotspot {
+    position: absolute;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 5;
+    transition: transform .2s ease;
+  }
+  .hotspot .ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid var(--acc-amber);
+    animation: pulseRing 2.2s infinite ease-out;
+  }
+  .hotspot .ring.delay { animation-delay: 1.1s; }
+  .hotspot .core {
+    position: absolute;
+    inset: 9px;
+    border-radius: 50%;
+    background: var(--acc-amber);
+    color: var(--bg-deep);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    font-size: 13px;
+    box-shadow: 0 0 18px rgba(245, 158, 11, 0.7);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .hotspot:hover { transform: scale(1.15); }
+  .hotspot.done .core   { background: var(--acc-green); color: white; box-shadow: 0 0 18px rgba(16, 185, 129, 0.6); }
+  .hotspot.done .ring   { display: none; }
+  .hotspot.failed .core { background: var(--acc-red); color: white; box-shadow: 0 0 18px rgba(239, 68, 68, 0.6); }
+  .hotspot.failed .ring { display: none; }
+
+  /* Scrollbar custom */
+  .scroll-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+  .scroll-thin::-webkit-scrollbar-track { background: transparent; }
+  .scroll-thin::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 3px; }
+  .scroll-thin::-webkit-scrollbar-thumb:hover { background: var(--border-hot); }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(4, 6, 11, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px;
+    animation: slideUp .25s ease-out;
+  }
+
+  /* Status pills */
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 10.5px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    font-weight: 700;
+    border: 1px solid;
+  }
+  .pill-blue   { color: var(--acc-blue);   border-color: rgba(45, 127, 249, 0.35); background: rgba(45, 127, 249, 0.08); }
+  .pill-amber  { color: var(--acc-amber);  border-color: rgba(245, 158, 11, 0.35); background: rgba(245, 158, 11, 0.08); }
+  .pill-green  { color: var(--acc-green);  border-color: rgba(16, 185, 129, 0.35); background: rgba(16, 185, 129, 0.08); }
+  .pill-red    { color: var(--acc-red);    border-color: rgba(239, 68, 68, 0.35);  background: rgba(239, 68, 68, 0.08); }
+  .pill-cyan   { color: var(--acc-cyan);   border-color: rgba(34, 211, 238, 0.35); background: rgba(34, 211, 238, 0.06); }
+
+  /* Indicador de conexion */
+  .conn-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--acc-green);
+    box-shadow: 0 0 8px var(--acc-green);
+    animation: blink 2s infinite;
+  }
+  .conn-dot.offline { background: var(--acc-red); box-shadow: 0 0 8px var(--acc-red); }
+  .conn-dot.warn    { background: var(--acc-amber); box-shadow: 0 0 8px var(--acc-amber); }
+
+  /* Posicionado layout principal */
+  .app-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 20px;
+  }
+  @media (max-width: 1100px) {
+    .app-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Bordes tipo CRT laterales */
+  .crt-lines {
+    position: relative;
+    overflow: hidden;
+  }
+  .crt-lines::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    top: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--acc-cyan), transparent);
+    opacity: 0.55;
+  }
+
+  /* Coche container */
+  .car-stage {
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 70%, rgba(45, 127, 249, 0.08) 0%, transparent 60%),
+      linear-gradient(180deg, rgba(15, 26, 46, 0.5) 0%, rgba(4, 6, 11, 0.8) 100%);
+    border: 1px solid var(--border-mid);
+    border-radius: 22px;
+    position: relative;
+    overflow: hidden;
+    min-height: 420px;
+  }
+  .car-stage .grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(34, 211, 238, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34, 211, 238, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+  }
+
+  /* Tabla leaderboard */
+  .lb-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(120, 160, 220, 0.03);
+    border: 1px solid var(--border-soft);
+    transition: all .2s;
+  }
+  .lb-row.me { background: rgba(45, 127, 249, 0.12); border-color: rgba(45, 127, 249, 0.45); }
+  .lb-row.finished { background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.35); }
+  .lb-row.disq { background: rgba(239, 68, 68, 0.06); border-color: rgba(239, 68, 68, 0.30); opacity: 0.75; }
+
+  .rank-badge {
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700; font-size: 13px;
+    flex-shrink: 0;
+  }
+  .rank-badge.gold   { background: linear-gradient(135deg, #FBBF24, #D97706); color: #2D1B00; }
+  .rank-badge.silver { background: linear-gradient(135deg, #E5E7EB, #9CA3AF); color: #1F2937; }
+  .rank-badge.bronze { background: linear-gradient(135deg, #D97706, #92400E); color: #1F1300; }
+  .rank-badge.other  { background: var(--bg-elevated); color: var(--txt-secondary); border: 1px solid var(--border-mid); }
+
+  /* Boton option pregunta */
+  .opt-btn {
+    width: 100%;
+    text-align: left;
+    background: var(--bg-deep);
+    border: 1.5px solid var(--border-mid);
+    color: var(--txt-primary);
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: all .2s;
+    display: flex; align-items: center; gap: 12px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .opt-btn:hover { border-color: var(--acc-blue); background: rgba(45, 127, 249, 0.06); }
+  .opt-btn .opt-letter {
+    width: 30px; height: 30px;
+    background: var(--bg-elevated);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700; font-size: 13px;
+    flex-shrink: 0;
+    border: 1px solid var(--border-mid);
+  }
+  .opt-btn.correct {
+    border-color: var(--acc-green);
+    background: rgba(16, 185, 129, 0.12);
+  }
+  .opt-btn.correct .opt-letter {
+    background: var(--acc-green); color: white; border-color: var(--acc-green);
+  }
+  .opt-btn.wrong {
+    border-color: var(--acc-red);
+    background: rgba(239, 68, 68, 0.10);
+  }
+  .opt-btn.wrong .opt-letter {
+    background: var(--acc-red); color: white; border-color: var(--acc-red);
+  }
+  .opt-btn:disabled { cursor: default; }
+
+  /* Stats card */
+  .stat-card {
+    background: var(--bg-deep);
+    border: 1px solid var(--border-mid);
+    border-radius: 12px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+  .stat-card .stat-label {
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--txt-muted);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .stat-card .stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 18px;
+  }
+</style>
+</head>
+<body class="min-h-screen flex flex-col relative z-10">
+
+<!-- ============== CABECERA ============== -->
+<header class="border-b border-white/5 backdrop-blur-md bg-black/30 sticky top-0 z-30">
+  <div class="max-w-[1400px] mx-auto px-5 py-3 flex items-center justify-between gap-4 flex-wrap">
+
+    <!-- Logo y Titulo -->
+    <div class="flex items-center gap-3">
+      <div class="relative">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center"
+             style="background: linear-gradient(135deg, var(--acc-blue), var(--acc-blue-2));
+                    box-shadow: 0 8px 24px -8px rgba(45, 127, 249, 0.7);">
+          <!-- Icono SVG: vehiculo + escudo -->
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 17h14M5 17a2 2 0 1 1-4 0M5 17V11l2-5h10l2 5v6M19 17a2 2 0 1 0 4 0M7 11h10"/>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="display-font text-2xl text-white tracking-wider leading-none">RUTA SEGURA</h1>
+          <span class="pill pill-amber">PESV · 40595</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-0.5 tracking-wide">Centro de Control · PAR Servicios de Ingenieria</p>
+      </div>
+    </div>
+
+    <!-- Estado conexion -->
+    <div class="flex items-center gap-3">
+      <div id="connection-status" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 bg-black/40">
+        <span class="conn-dot offline" id="conn-dot"></span>
+        <span class="text-[11px] mono-font font-bold uppercase tracking-wider" id="conn-text">Desconectado</span>
+      </div>
+      <div id="header-stats" class="hidden lg:flex items-center gap-2">
+        <div class="px-3 py-1.5 rounded-lg border border-white/10 bg-black/40">
+          <span class="text-[9px] text-slate-400 uppercase tracking-widest block leading-none">Tiempo</span>
+          <span class="mono-font font-bold text-amber-400 text-sm" id="header-time">00:00</span>
+        </div>
+        <div class="px-3 py-1.5 rounded-lg border border-white/10 bg-black/40">
+          <span class="text-[9px] text-slate-400 uppercase tracking-widest block leading-none">Penal.</span>
+          <span class="mono-font font-bold text-red-400 text-sm" id="header-pen">+0s</span>
+        </div>
+        <div class="px-3 py-1.5 rounded-lg border border-white/10 bg-black/40">
+          <span class="text-[9px] text-slate-400 uppercase tracking-widest block leading-none">Vidas</span>
+          <span class="mono-font font-bold text-emerald-400 text-sm" id="header-lives">3/3</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+<!-- ============== CONTENIDO PRINCIPAL ============== -->
+<main class="flex-grow max-w-[1400px] mx-auto w-full px-5 py-6 relative z-10">
+
+  <!-- =================== PANTALLA 1: ACCESO ============================= -->
+  <section id="screen-access" class="anim-slide-up">
+
+    <div class="grid lg:grid-cols-2 gap-6 items-stretch">
+
+      <!-- Columna izquierda: Branding -->
+      <div class="panel corner-marks p-8 flex flex-col justify-between relative overflow-hidden">
+        <span class="cm-tl"></span><span class="cm-tr"></span>
+
+        <div>
+          <div class="flex items-center gap-2 mb-5">
+            <span class="conn-dot anim-blink"></span>
+            <span class="text-[11px] uppercase tracking-[0.2em] font-bold text-emerald-400">Sistema Operativo</span>
+          </div>
+
+          <h2 class="display-font text-5xl md:text-6xl text-white leading-[0.95] mb-3">
+            DESAFIO DE<br>SEGURIDAD VIAL
+          </h2>
+          <p class="text-slate-400 text-sm leading-relaxed max-w-md">
+            Capacitacion gamificada multijugador del Plan Estrategico de Seguridad Vial.
+            Inspecciona los 10 puntos criticos del vehiculo, responde correctamente y
+            compite en tiempo real con tu equipo.
+          </p>
+
+          <!-- Stats descriptivos -->
+          <div class="grid grid-cols-3 gap-2 mt-6 max-w-md">
+            <div class="stat-card">
+              <div class="stat-label">Puntos</div>
+              <div class="stat-value text-amber-400">10</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Vidas</div>
+              <div class="stat-value text-red-400">3</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Penal.</div>
+              <div class="stat-value text-cyan-400">10s</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carro decorativo -->
+        <div class="absolute right-[-40px] bottom-[-30px] opacity-15 pointer-events-none">
+          <svg width="280" height="160" viewBox="0 0 400 230" fill="none">
+            <path d="M30 170 L60 100 Q70 80 95 80 L155 80 L185 50 L290 50 L325 80 L355 80 Q375 80 375 100 L380 170 Z"
+                  stroke="currentColor" stroke-width="3" class="text-blue-400"/>
+            <circle cx="100" cy="175" r="28" stroke="currentColor" stroke-width="3" class="text-blue-400"/>
+            <circle cx="310" cy="175" r="28" stroke="currentColor" stroke-width="3" class="text-blue-400"/>
+            <path d="M105 80 L130 55 L175 55 L165 80 Z M195 55 L280 55 L300 80 L195 80 Z"
+                  stroke="currentColor" stroke-width="2" class="text-blue-400"/>
+          </svg>
+        </div>
+
+        <!-- Info inferior -->
+        <div class="relative z-10 mt-8 grid grid-cols-2 gap-3 text-[11px]">
+          <div class="flex items-start gap-2 text-slate-400">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-amber-400 mt-0.5 flex-shrink-0">
+              <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+            </svg>
+            Tiempo neto sin pausa
+          </div>
+          <div class="flex items-start gap-2 text-slate-400">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-red-400 mt-0.5 flex-shrink-0">
+              <path d="M12 2L2 22h20L12 2z"/><path d="M12 9v4M12 17h.01"/>
+            </svg>
+            Penalizacion +10s por error
+          </div>
+          <div class="flex items-start gap-2 text-slate-400">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-emerald-400 mt-0.5 flex-shrink-0">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>
+            </svg>
+            Sincronizacion en vivo
+          </div>
+          <div class="flex items-start gap-2 text-slate-400">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-cyan-400 mt-0.5 flex-shrink-0">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/>
+              <path d="M20 8v6M23 11h-6"/>
+            </svg>
+            Salas multijugador
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna derecha: Formulario -->
+      <div class="panel p-7 flex flex-col">
+
+        <!-- Tabs -->
+        <div class="flex gap-2 mb-5">
+          <button id="tab-join" onclick="setAccessTab('join')" class="flex-1 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wider transition-all">
+            Unirme a Sala
+          </button>
+          <button id="tab-create" onclick="setAccessTab('create')" class="flex-1 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wider transition-all">
+            Crear Sala
+          </button>
+        </div>
+
+        <!-- Formulario UNIRSE -->
+        <form id="form-join" class="space-y-3 flex-grow flex flex-col" onsubmit="event.preventDefault(); accionUnirse();">
+
+          <div>
+            <label class="label-tag">Nombre completo</label>
+            <input type="text" id="join-nombre" required maxlength="40" placeholder="Ej. Carlos Mendoza Reyes" class="input-field" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="label-tag">Cargo (opcional)</label>
+              <input type="text" id="join-cargo" maxlength="30" placeholder="Ej. Conductor" class="input-field" />
+            </div>
+            <div>
+              <label class="label-tag">Cedula (opcional)</label>
+              <input type="text" id="join-cedula" maxlength="15" placeholder="0000000" class="input-field mono-font" />
+            </div>
+          </div>
+
+          <div>
+            <label class="label-tag">Codigo de sala</label>
+            <input type="text" id="join-codigo" required maxlength="8" placeholder="EJ: ABCD23" class="input-field mono-font uppercase tracking-widest" style="font-size: 18px; font-weight: 700;" />
+            <p class="text-[10.5px] text-slate-500 mt-1.5">Solicita el codigo al organizador de tu capacitacion.</p>
+          </div>
+
+          <div class="flex-grow"></div>
+
+          <button type="submit" class="btn-primary w-full mt-4" id="btn-join">
+            <span class="flex items-center justify-center gap-2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/>
+              </svg>
+              Ingresar a la Sala
+            </span>
+          </button>
+          <div id="join-error" class="hidden text-xs text-red-400 text-center mt-2 mono-font"></div>
+        </form>
+
+        <!-- Formulario CREAR -->
+        <form id="form-create" class="space-y-3 flex-grow flex-col hidden" onsubmit="event.preventDefault(); accionCrear();">
+
+          <div>
+            <label class="label-tag">Tu nombre (capacitador / organizador)</label>
+            <input type="text" id="create-nombre" required maxlength="40" placeholder="Ej. Esneyder Zapata" class="input-field" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="label-tag">Cargo</label>
+              <input type="text" id="create-cargo" maxlength="30" placeholder="Ej. Coordinador SST" class="input-field" />
+            </div>
+            <div>
+              <label class="label-tag">Cedula</label>
+              <input type="text" id="create-cedula" maxlength="15" placeholder="0000000" class="input-field mono-font" />
+            </div>
+          </div>
+
+          <div>
+            <label class="label-tag">Codigo de sala sugerido (opcional)</label>
+            <input type="text" id="create-codigo" maxlength="8" placeholder="Dejar vacio para autogenerar" class="input-field mono-font uppercase tracking-widest" />
+            <p class="text-[10.5px] text-slate-500 mt-1.5">Si lo dejas vacio se generara un codigo unico automaticamente.</p>
+          </div>
+
+          <div class="flex-grow"></div>
+
+          <button type="submit" class="btn-success w-full mt-4" id="btn-create">
+            <span class="flex items-center justify-center gap-2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+              Crear nueva sala
+            </span>
+          </button>
+          <div id="create-error" class="hidden text-xs text-red-400 text-center mt-2 mono-font"></div>
+        </form>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =================== PANTALLA 2: LOBBY ============================= -->
+  <section id="screen-lobby" class="hidden anim-slide-up">
+    <div class="app-grid">
+
+      <!-- Panel principal lobby -->
+      <div class="panel p-7 corner-marks relative">
+        <span class="cm-tl"></span><span class="cm-tr"></span>
+
+        <div class="flex items-center justify-between flex-wrap gap-3 border-b border-white/5 pb-4">
+          <div>
+            <span class="pill pill-blue">Sala Activa</span>
+            <h2 class="display-font text-4xl text-white mt-2 leading-none">SALA DE COMPETENCIA</h2>
+            <p class="text-sm text-slate-400 mt-1">Comparte el codigo con tu equipo y empieza cuando esten todos.</p>
+          </div>
+
+          <!-- Codigo grande -->
+          <div class="panel-elevated px-6 py-4 text-center relative">
+            <div class="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">Codigo de Sala</div>
+            <div class="display-font text-5xl text-amber-400 tracking-[0.15em] mt-1 leading-none" id="lobby-codigo">XXXXXX</div>
+            <button onclick="copiarCodigo()" class="text-[10px] text-cyan-400 hover:text-cyan-300 mt-2 inline-flex items-center gap-1 mono-font uppercase tracking-wider">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              <span id="copy-text">Copiar codigo</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Player info -->
+        <div class="grid md:grid-cols-3 gap-3 mt-5">
+          <div class="stat-card text-left">
+            <div class="stat-label">Tu nombre</div>
+            <div class="text-white font-bold text-base mt-0.5 truncate" id="lobby-player-name">—</div>
+          </div>
+          <div class="stat-card text-left">
+            <div class="stat-label">Tu cargo</div>
+            <div class="text-white font-bold text-base mt-0.5 truncate" id="lobby-player-cargo">—</div>
+          </div>
+          <div class="stat-card text-left">
+            <div class="stat-label">Conductores conectados</div>
+            <div class="text-emerald-400 font-bold text-base mt-0.5 mono-font" id="lobby-player-count">0</div>
+          </div>
+        </div>
+
+        <!-- Instrucciones de juego -->
+        <div class="mt-6">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-1 h-5 bg-amber-400 rounded-full"></div>
+            <h3 class="display-font text-2xl text-white tracking-wide">REGLAS DE LA COMPETENCIA</h3>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-3">
+
+            <div class="panel-elevated p-4 flex gap-3">
+              <div class="w-9 h-9 rounded-lg bg-blue-500/15 border border-blue-500/30 flex items-center justify-center flex-shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="text-blue-400">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-white">Tiempo neto</div>
+                <div class="text-xs text-slate-400 mt-0.5">El cronometro arranca al iniciar la inspeccion y solo se detiene al finalizar los 10 puntos.</div>
+              </div>
+            </div>
+
+            <div class="panel-elevated p-4 flex gap-3">
+              <div class="w-9 h-9 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center flex-shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="text-amber-400">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-white">Penalizacion</div>
+                <div class="text-xs text-slate-400 mt-0.5">Cada respuesta incorrecta agrega +10 segundos a tu tiempo final.</div>
+              </div>
+            </div>
+
+            <div class="panel-elevated p-4 flex gap-3">
+              <div class="w-9 h-9 rounded-lg bg-red-500/15 border border-red-500/30 flex items-center justify-center flex-shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="text-red-400">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-white">Tres vidas</div>
+                <div class="text-xs text-slate-400 mt-0.5">Pierdes una vida por cada error. Al llegar a cero quedas descalificado.</div>
+              </div>
+            </div>
+
+            <div class="panel-elevated p-4 flex gap-3">
+              <div class="w-9 h-9 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center flex-shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="text-emerald-400">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                </svg>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-white">Diez puntos criticos</div>
+                <div class="text-xs text-slate-400 mt-0.5">Haz clic en cada hotspot del vehiculo y responde la pregunta del PESV.</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Boton iniciar -->
+        <div class="mt-7 text-center">
+          <button onclick="iniciarJuego()" class="btn-success px-10 py-4 text-base">
+            <span class="flex items-center justify-center gap-2">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round">
+                <polygon points="6 3 20 12 6 21 6 3"/>
+              </svg>
+              INICIAR MI INSPECCION
+            </span>
+          </button>
+          <p class="text-[11px] text-slate-500 mt-2">Cada conductor inicia su propio cronometro de forma independiente.</p>
+        </div>
+      </div>
+
+      <!-- Panel lateral leaderboard -->
+      <aside class="panel p-5 flex flex-col" style="max-height: 720px;">
+        <div class="flex items-center justify-between border-b border-white/5 pb-3 mb-3">
+          <div class="flex items-center gap-2">
+            <span class="conn-dot anim-blink"></span>
+            <h3 class="display-font text-xl text-white tracking-wider leading-none">RANKING EN VIVO</h3>
+          </div>
+          <span class="text-[10px] mono-font text-slate-500 uppercase" id="lb-update">--:--</span>
+        </div>
+
+        <div id="leaderboard-list" class="space-y-2 overflow-y-auto scroll-thin flex-grow pr-1">
+          <div class="text-center py-10 text-slate-500 text-xs">
+            <div class="anim-blink display-font text-lg">CARGANDO...</div>
+          </div>
+        </div>
+
+        <div class="border-t border-white/5 pt-3 mt-3">
+          <div class="text-[10px] text-slate-500 mono-font uppercase tracking-wider text-center">
+            Actualizado cada 3s · <span id="lb-count">0</span> jugadores
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- =================== PANTALLA 3: JUEGO (COCHE INTERACTIVO) ============== -->
+  <section id="screen-game" class="hidden anim-slide-up">
+    <div class="app-grid">
+
+      <!-- Stage principal con el coche -->
+      <div class="panel p-5 corner-marks relative">
+        <span class="cm-tl"></span><span class="cm-tr"></span>
+
+        <!-- Cabecera -->
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="pill pill-amber">Inspeccion Preoperacional</span>
+              <span class="pill pill-cyan" id="game-progress-pill">0 / 10</span>
+            </div>
+            <h2 class="display-font text-3xl text-white tracking-wide leading-none">VERIFICA TODOS LOS PUNTOS CRITICOS</h2>
+            <p class="text-xs text-slate-400 mt-1">Haz clic en cada marcador del vehiculo y responde la pregunta para validar el cumplimiento del PESV.</p>
+          </div>
+
+          <!-- Stats mobile -->
+          <div class="flex lg:hidden gap-2">
+            <div class="stat-card">
+              <div class="stat-label">Tiempo</div>
+              <div class="stat-value text-amber-400" id="game-time-m">00:00</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Vidas</div>
+              <div class="stat-value text-emerald-400" id="game-lives-m">3/3</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stage del coche -->
+        <div class="car-stage" id="car-stage">
+          <div class="grid-bg"></div>
+
+          <!-- Indicador de scan animado -->
+          <div class="absolute left-0 right-0 top-0 h-12 pointer-events-none opacity-50 z-0"
+               style="background: linear-gradient(180deg, rgba(34, 211, 238, 0.15), transparent); animation: scanLine 4s linear infinite;">
+          </div>
+
+          <!-- SVG del vehiculo -->
+          <svg viewBox="0 0 800 480" class="w-full h-full block relative z-10" preserveAspectRatio="xMidYMid meet" style="max-height: 480px;">
+
+            <defs>
+              <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#2D7FF9" stop-opacity="0.55"/>
+                <stop offset="60%" stop-color="#0066CC" stop-opacity="0.85"/>
+                <stop offset="100%" stop-color="#0F2742" stop-opacity="1"/>
+              </linearGradient>
+              <linearGradient id="glassGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#22D3EE" stop-opacity="0.45"/>
+                <stop offset="100%" stop-color="#0066CC" stop-opacity="0.25"/>
+              </linearGradient>
+              <radialGradient id="headLight" cx="0.5" cy="0.5" r="0.5">
+                <stop offset="0%" stop-color="#FEF3C7" stop-opacity="1"/>
+                <stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="floorGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1F2937" stop-opacity="0.45"/>
+                <stop offset="100%" stop-color="#0A1220" stop-opacity="0"/>
+              </linearGradient>
+              <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="6" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <!-- Sombra/piso -->
+            <ellipse cx="400" cy="395" rx="290" ry="14" fill="url(#floorGrad)"/>
+
+            <!-- Lineas de blueprint laterales -->
+            <g stroke="#22D3EE" stroke-opacity="0.18" stroke-width="0.7" stroke-dasharray="4 4">
+              <line x1="40"  y1="200" x2="760" y2="200"/>
+              <line x1="40"  y1="320" x2="760" y2="320"/>
+              <line x1="120" y1="60"  x2="120" y2="440"/>
+              <line x1="680" y1="60"  x2="680" y2="440"/>
+            </g>
+
+            <!-- Etiquetas blueprint -->
+            <text x="44" y="58" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.55">VEH-01 // RUTA SEGURA</text>
+            <text x="44" y="430" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.55">PESV · RES 40595 · 2022</text>
+            <text x="660" y="58" font-family="JetBrains Mono" font-size="9" fill="#22D3EE" opacity="0.55">CHECKLIST 10/10</text>
+
+            <!-- ========== CHASIS DEL VEHICULO ========== -->
+            <!-- Cuerpo principal (vista lateral 3/4) -->
+            <path d="
+              M 130 320
+              L 165 220
+              Q 170 200 195 200
+              L 290 200
+              L 340 145
+              Q 350 135 365 135
+              L 525 135
+              Q 545 135 555 150
+              L 600 200
+              L 650 200
+              Q 680 200 690 220
+              L 710 320
+              L 690 350
+              L 130 350
+              Z" fill="url(#bodyGrad)" stroke="#22D3EE" stroke-width="2" stroke-opacity="0.6"/>
+
+            <!-- Ventanas -->
+            <path d="M 200 200 L 250 200 L 295 150 L 250 150 Z" fill="url(#glassGrad)" stroke="#22D3EE" stroke-width="1" stroke-opacity="0.4"/>
+            <path d="M 305 145 L 390 145 L 390 200 L 295 200 Z" fill="url(#glassGrad)" stroke="#22D3EE" stroke-width="1" stroke-opacity="0.4"/>
+            <path d="M 400 145 L 525 145 L 555 200 L 400 200 Z" fill="url(#glassGrad)" stroke="#22D3EE" stroke-width="1" stroke-opacity="0.4"/>
+
+            <!-- Lineas de division -->
+            <line x1="395" y1="145" x2="395" y2="200" stroke="#22D3EE" stroke-width="2" stroke-opacity="0.5"/>
+
+            <!-- Manijas -->
+            <rect x="320" y="225" width="40" height="5" rx="2" fill="#22D3EE" opacity="0.4"/>
+            <rect x="460" y="225" width="40" height="5" rx="2" fill="#22D3EE" opacity="0.4"/>
+
+            <!-- Faros delanteros -->
+            <ellipse cx="685" cy="248" rx="22" ry="14" fill="url(#headLight)"/>
+            <ellipse cx="685" cy="248" rx="14" ry="8" fill="#FDE68A" opacity="0.9"/>
+
+            <!-- Luces traseras -->
+            <rect x="135" y="240" width="14" height="22" rx="3" fill="#EF4444" opacity="0.85"/>
+
+            <!-- Parrilla frontal -->
+            <g transform="translate(660, 280)">
+              <rect width="40" height="40" rx="4" fill="#0A1220" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="1.5"/>
+              <line x1="5" y1="10" x2="35" y2="10" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="1"/>
+              <line x1="5" y1="20" x2="35" y2="20" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="1"/>
+              <line x1="5" y1="30" x2="35" y2="30" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="1"/>
+            </g>
+
+            <!-- Limpiaparabrisas (linea sobre parabrisas) -->
+            <line x1="320" y1="200" x2="380" y2="155" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="320" cy="200" r="3" fill="#94A3B8"/>
+
+            <!-- Espejo retrovisor exterior -->
+            <path d="M 250 195 L 232 188 L 232 200 L 250 205 Z" fill="#0F2742" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="1.5"/>
+
+            <!-- Ruedas -->
+            <g transform="translate(225, 360)">
+              <circle r="42" fill="#0A1220" stroke="#22D3EE" stroke-width="2.5" stroke-opacity="0.6"/>
+              <circle r="22" fill="#142340" stroke="#22D3EE" stroke-width="1.5" stroke-opacity="0.5"/>
+              <circle r="6" fill="#22D3EE" opacity="0.5"/>
+              <g stroke="#22D3EE" stroke-width="2" stroke-opacity="0.4">
+                <line x1="-22" y1="0" x2="-8" y2="0"/>
+                <line x1="22" y1="0" x2="8" y2="0"/>
+                <line x1="0" y1="-22" x2="0" y2="-8"/>
+                <line x1="0" y1="22" x2="0" y2="8"/>
+              </g>
+            </g>
+            <g transform="translate(605, 360)">
+              <circle r="42" fill="#0A1220" stroke="#22D3EE" stroke-width="2.5" stroke-opacity="0.6"/>
+              <circle r="22" fill="#142340" stroke="#22D3EE" stroke-width="1.5" stroke-opacity="0.5"/>
+              <circle r="6" fill="#22D3EE" opacity="0.5"/>
+              <g stroke="#22D3EE" stroke-width="2" stroke-opacity="0.4">
+                <line x1="-22" y1="0" x2="-8" y2="0"/>
+                <line x1="22" y1="0" x2="8" y2="0"/>
+                <line x1="0" y1="-22" x2="0" y2="-8"/>
+                <line x1="0" y1="22" x2="0" y2="8"/>
+              </g>
+            </g>
+
+            <!-- Marcas tecnicas decorativas -->
+            <g font-family="JetBrains Mono" font-size="8" fill="#22D3EE" opacity="0.4">
+              <text x="220" y="425">LLANTA-01</text>
+              <text x="595" y="425">LLANTA-02</text>
+            </g>
+
+          </svg>
+
+          <!-- ========== HOTSPOTS INTERACTIVOS (sobreposiciones absolutas) ========== -->
+          <!-- Posiciones porcentuales para que respondan al resize -->
+          <div id="hotspots-container" class="absolute inset-0 pointer-events-none">
+            <!-- Generados dinamicamente desde JS -->
+          </div>
+        </div>
+
+        <!-- Footer del stage: estadisticas -->
+        <div class="grid grid-cols-4 gap-2 mt-4">
+          <div class="stat-card">
+            <div class="stat-label">Progreso</div>
+            <div class="stat-value text-cyan-400" id="game-progress">0/10</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Tiempo neto</div>
+            <div class="stat-value text-amber-400" id="game-time">00:00</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Penal.</div>
+            <div class="stat-value text-red-400" id="game-pen">+0s</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Vidas</div>
+            <div class="stat-value text-emerald-400" id="game-lives">3/3</div>
+          </div>
+        </div>
+
+        <!-- Boton de finalizar (aparece al completar 10) -->
+        <div class="mt-4 text-center">
+          <button id="btn-finalizar" disabled onclick="finalizarJuego()" class="btn-success px-10 py-3.5">
+            <span class="flex items-center justify-center gap-2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4l16 8-16 8 0-8z"/>
+              </svg>
+              FINALIZAR INSPECCION
+            </span>
+          </button>
+          <p class="text-[10px] text-slate-500 mt-1.5" id="btn-finalizar-hint">Completa los 10 puntos para finalizar</p>
+        </div>
+      </div>
+
+      <!-- Panel lateral leaderboard durante juego -->
+      <aside class="panel p-5 flex flex-col" style="max-height: 820px;">
+        <div class="flex items-center justify-between border-b border-white/5 pb-3 mb-3">
+          <div class="flex items-center gap-2">
+            <span class="conn-dot anim-blink"></span>
+            <h3 class="display-font text-xl text-white tracking-wider leading-none">RANKING EN VIVO</h3>
+          </div>
+          <span class="text-[10px] mono-font text-slate-500 uppercase" id="lb-update-game">--:--</span>
+        </div>
+
+        <div class="panel-elevated p-3 mb-3 text-center">
+          <div class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Sala</div>
+          <div class="display-font text-2xl text-amber-400 tracking-widest" id="game-room-code">XXXXXX</div>
+        </div>
+
+        <div id="leaderboard-list-game" class="space-y-2 overflow-y-auto scroll-thin flex-grow pr-1">
+          <div class="text-center py-10 text-slate-500 text-xs">
+            <div class="anim-blink display-font text-lg">CARGANDO...</div>
+          </div>
+        </div>
+
+        <div class="border-t border-white/5 pt-3 mt-3 text-center">
+          <div class="text-[10px] text-slate-500 mono-font uppercase tracking-wider">
+            <span id="lb-count-game">0</span> conductores · Sync 3s
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- =================== PANTALLA 4: RESULTADO ============================= -->
+  <section id="screen-result" class="hidden anim-slide-up">
+    <div class="panel p-7 corner-marks relative max-w-5xl mx-auto">
+      <span class="cm-tl"></span><span class="cm-tr"></span>
+
+      <!-- Header resultado -->
+      <div class="text-center mb-6">
+        <div id="result-icon-wrapper" class="w-20 h-20 mx-auto mb-3 rounded-2xl flex items-center justify-center"
+             style="background: linear-gradient(135deg, var(--acc-green), #059669); box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.7);">
+          <svg id="result-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <h2 id="result-title" class="display-font text-4xl text-white tracking-wider leading-none">INSPECCION COMPLETADA</h2>
+        <p id="result-subtitle" class="text-sm text-slate-400 mt-2">Has finalizado la capacitacion ludica del PESV. Tu resultado fue guardado en la nube.</p>
+
+        <div id="sync-status" class="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 bg-black/40">
+          <span class="conn-dot anim-blink" id="sync-dot"></span>
+          <span class="text-[11px] mono-font font-bold uppercase tracking-wider" id="sync-text">Sincronizando con central...</span>
+        </div>
+      </div>
+
+      <!-- Stats finales -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <div class="panel-elevated p-4 text-center">
+          <div class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Aciertos</div>
+          <div class="display-font text-4xl text-emerald-400 mt-1 leading-none" id="result-score">0/10</div>
+        </div>
+        <div class="panel-elevated p-4 text-center">
+          <div class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Vidas</div>
+          <div class="display-font text-4xl text-red-400 mt-1 leading-none" id="result-lives">3/3</div>
+        </div>
+        <div class="panel-elevated p-4 text-center">
+          <div class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Penalizaciones</div>
+          <div class="display-font text-4xl text-amber-400 mt-1 leading-none" id="result-pen">0s</div>
+        </div>
+        <div class="panel-elevated p-4 text-center">
+          <div class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Tiempo Total</div>
+          <div class="display-font text-4xl text-blue-400 mt-1 leading-none mono-font" id="result-time">00:00</div>
+        </div>
+      </div>
+
+      <!-- Certificado -->
+      <div class="flex flex-col items-center my-5">
+        <canvas id="cert-canvas" width="800" height="500" class="max-w-full h-auto rounded-xl border border-white/10 shadow-2xl"></canvas>
+        <p class="text-[10px] text-slate-500 mt-2 mono-font uppercase tracking-wider">Constancia oficial - Verificada SST PAR Servicios</p>
+      </div>
+
+      <!-- Botones de accion -->
+      <div class="flex flex-wrap gap-3 justify-center mt-5">
+        <button onclick="descargarCertificado()" class="btn-primary">
+          <span class="flex items-center justify-center gap-2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+            </svg>
+            Descargar Certificado
+          </span>
+        </button>
+        <button onclick="verRankingFinal()" class="btn-ghost">
+          <span class="flex items-center justify-center gap-2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0 0 12 0V2z"/>
+            </svg>
+            Ranking Final
+          </span>
+        </button>
+        <button onclick="reiniciarJuego()" class="btn-ghost">
+          <span class="flex items-center justify-center gap-2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
+            Volver a Competir
+          </span>
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =================== MODAL DE PREGUNTA ============================= -->
+  <div id="modal-question" class="hidden modal-backdrop">
+    <div class="panel-elevated p-6 max-w-2xl w-full corner-marks relative">
+      <span class="cm-tl"></span><span class="cm-tr"></span>
+
+      <!-- Header pregunta -->
+      <div class="flex items-start gap-3 mb-4 pb-4 border-b border-white/5">
+        <div id="modal-icon" class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+             style="background: linear-gradient(135deg, var(--acc-amber), #D97706);">
+          <!-- Icono dinamico -->
+        </div>
+        <div class="flex-grow">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="pill pill-amber" id="modal-tag">Punto 1 de 10</span>
+            <span class="text-[10px] mono-font text-cyan-400 uppercase tracking-wider" id="modal-component">COMPONENTE</span>
+          </div>
+          <h3 id="modal-title" class="display-font text-2xl text-white tracking-wide leading-tight">TITULO</h3>
+        </div>
+        <button onclick="cerrarModal()" class="text-slate-500 hover:text-white transition flex-shrink-0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Pregunta -->
+      <div class="mb-5">
+        <p class="text-sm text-slate-300 leading-relaxed" id="modal-question-text">
+          Pregunta aqui
+        </p>
+      </div>
+
+      <!-- Opciones -->
+      <div class="space-y-2.5" id="modal-options">
+        <!-- Generadas dinamicamente -->
+      </div>
+
+      <!-- Feedback -->
+      <div id="modal-feedback" class="hidden mt-4 p-4 rounded-xl text-sm">
+        <!-- Mostrado tras responder -->
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- ============== PIE DE PAGINA ============== -->
+<footer class="border-t border-white/5 backdrop-blur-md bg-black/30 mt-10 relative z-10">
+  <div class="max-w-[1400px] mx-auto px-5 py-3 flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-500">
+    <div>&copy; 2026 PAR Servicios de Ingenieria S.A.S. · Sistema de Gestion de Seguridad Vial</div>
+    <div class="flex items-center gap-4">
+      <span class="flex items-center gap-1.5">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-blue-400">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        SST Corporativo
+      </span>
+      <span class="flex items-center gap-1.5">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-emerald-400">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        Resolucion 40595 de 2022
+      </span>
+    </div>
+  </div>
+</footer>
+
+
+<!-- =====================================================
+     CAPA DE LOGICA: AUDIO + ESTADO + COMUNICACION GS
+     ===================================================== -->
+<script>
+// ============================================================
+//  CONFIGURACION CRITICA
+// ============================================================
+//  PEGA AQUI LA URL DEL DESPLIEGUE DEL APPS SCRIPT (Web App)
+//  Si la dejas vacia, el juego funcionara en MODO LOCAL (sin
+//  guardado en sheets, sin multijugador real).
+//
+//  Para obtenerla:
+//    1. En script.google.com abre tu proyecto
+//    2. Desplegar > Nueva implementacion > Aplicacion web
+//    3. Ejecutar como: Yo · Acceso: Cualquier persona
+//    4. Copia la URL terminada en /exec y pegala abajo
+// ============================================================
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwoI4v4_k22UnABJIgJOcIs_l6JYzwn7sEQRKJs8wrZtKXw6EnHIG3f5kNBzIUDM8Ob6A/exec"; // <-- PEGAR URL AQUI
+
+// ============================================================
+//  CATALOGO DE 10 PREGUNTAS PESV - PUNTOS CRITICOS DEL VEHICULO
+//  Coordenadas (left, top) en porcentaje sobre el stage del coche
+// ============================================================
+const PUNTOS_CRITICOS = [
+  {
+    id: 1, key: "luces", componente: "Faros Delanteros",
+    titulo: "SISTEMA DE ILUMINACION",
+    pos: { left: 85.5, top: 47 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.3 4.5 3 5.7V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.3c1.7-1.2 3-3.3 3-5.7a7 7 0 0 0-7-7zM9 21h6M10 18h4"/></svg>',
+    pregunta: "Segun el PESV, ¿con que frecuencia debes verificar el correcto funcionamiento de luces altas, bajas, direccionales y de freno antes de iniciar la operacion?",
+    opciones: [
+      { txt: "Solo cuando se enciende un testigo en el tablero", correcta: false },
+      { txt: "Una vez por semana en la oficina", correcta: false },
+      { txt: "Diariamente en la inspeccion preoperacional, antes de iniciar la ruta", correcta: true },
+      { txt: "Solo cuando el vehiculo va al taller", correcta: false }
+    ],
+    explicacion: "La inspeccion preoperacional diaria es obligatoria y debe registrarse en la lista de chequeo antes de cada jornada."
+  },
+  {
+    id: 2, key: "llanta-delantera", componente: "Llanta Delantera",
+    titulo: "PROFUNDIDAD DE LABRADO",
+    pos: { left: 28, top: 76 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="3" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="21"/><line x1="3" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="21" y2="12"/></svg>',
+    pregunta: "¿Cual es la profundidad MINIMA legal del labrado de las llantas en Colombia, medida en cualquier punto de la banda de rodadura?",
+    opciones: [
+      { txt: "0.5 mm", correcta: false },
+      { txt: "1.0 mm", correcta: false },
+      { txt: "1.6 mm", correcta: true },
+      { txt: "3.0 mm", correcta: false }
+    ],
+    explicacion: "La normativa colombiana establece 1.6 mm como minimo. Por debajo de ese valor, la llanta debe ser cambiada inmediatamente."
+  },
+  {
+    id: 3, key: "llanta-trasera", componente: "Sistema de Frenos",
+    titulo: "CONTROL DE FRENADO",
+    pos: { left: 73, top: 76 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><path d="M3 12a9 9 0 0 1 18 0"/></svg>',
+    pregunta: "Durante el preoperacional notas que al frenar el vehiculo tira ligeramente hacia un lado. ¿Cual es la accion correcta segun el PESV?",
+    opciones: [
+      { txt: "Continuar la ruta y reportar al final del dia", correcta: false },
+      { txt: "Detener la operacion, reportar inmediatamente y no movilizar el vehiculo hasta su revision", correcta: true },
+      { txt: "Manejar mas despacio y compensar con el volante", correcta: false },
+      { txt: "Esperar a que el problema empeore para justificar el taller", correcta: false }
+    ],
+    explicacion: "Cualquier anomalia en el sistema de frenos es CRITICA. La ruta debe detenerse inmediatamente y reportarse al supervisor."
+  },
+  {
+    id: 4, key: "cinturon", componente: "Cinturon de Seguridad",
+    titulo: "RETENCION OBLIGATORIA",
+    pos: { left: 53, top: 50 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M20 12c0 5-3 8-8 8s-8-3-8-8 3-8 8-8 8 3 8 8z"/><path d="M9 9l6 6M15 9l-6 6"/></svg>',
+    pregunta: "¿En que casos NO es obligatorio el uso del cinturon de seguridad para los ocupantes del vehiculo?",
+    opciones: [
+      { txt: "Nunca; es obligatorio para todos los ocupantes en todo momento y en cualquier via", correcta: true },
+      { txt: "Cuando se circula a baja velocidad dentro de la ciudad", correcta: false },
+      { txt: "Para los pasajeros que van en el asiento trasero", correcta: false },
+      { txt: "Cuando el recorrido es de menos de 5 minutos", correcta: false }
+    ],
+    explicacion: "Ley 769 de 2002: el cinturon es de uso obligatorio para todos los ocupantes, en todo momento, sin excepcion."
+  },
+  {
+    id: 5, key: "espejo", componente: "Espejos Retrovisores",
+    titulo: "ELIMINACION DE PUNTO CIEGO",
+    pos: { left: 38, top: 52 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>',
+    pregunta: "El \"punto ciego\" del vehiculo se define como:",
+    opciones: [
+      { txt: "El area frontal cubierta por la columna del parabrisas", correcta: false },
+      { txt: "El area alrededor del vehiculo que NO es visible por los espejos retrovisores", correcta: true },
+      { txt: "La zona detras del vehiculo durante la noche", correcta: false },
+      { txt: "Cualquier zona con niebla o lluvia intensa", correcta: false }
+    ],
+    explicacion: "El punto ciego es el area no cubierta por espejos. Antes de cambiar de carril es obligatorio girar la cabeza para verificarlo."
+  },
+  {
+    id: 6, key: "botiquin", componente: "Botiquin Vehicular",
+    titulo: "KIT DE PRIMEROS AUXILIOS",
+    pos: { left: 19, top: 55 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>',
+    pregunta: "¿Cuales son los elementos MINIMOS que debe contener el botiquin de primeros auxilios de un vehiculo de servicio?",
+    opciones: [
+      { txt: "Solo gasas y curitas", correcta: false },
+      { txt: "Gasas, vendas, antisepticos, guantes desechables y tijeras", correcta: true },
+      { txt: "Medicamentos para el dolor y la fiebre", correcta: false },
+      { txt: "Equipo de sutura y bisturi", correcta: false }
+    ],
+    explicacion: "El botiquin basico segun el PESV incluye material de curacion. NUNCA debe contener medicamentos sin prescripcion."
+  },
+  {
+    id: 7, key: "extintor", componente: "Extintor de Incendios",
+    titulo: "PREVENCION DE INCENDIO",
+    pos: { left: 76, top: 55 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M9 5h6v3h-6z"/><path d="M10 8v13a2 2 0 0 0 2 2 2 2 0 0 0 2-2V8"/><path d="M7 5l2-3M17 5l-2-3"/></svg>',
+    pregunta: "¿Que tipo y capacidad de extintor debe portar un vehiculo de servicio segun la normativa colombiana?",
+    opciones: [
+      { txt: "Cualquier extintor pequeño en buen estado", correcta: false },
+      { txt: "Multiproposito ABC de minimo 5 libras, con carga vigente y sello visible", correcta: true },
+      { txt: "Tipo agua de 2 litros", correcta: false },
+      { txt: "Tipo CO2 de 20 libras", correcta: false }
+    ],
+    explicacion: "Resolucion 1565 / Resolucion 40595: extintor ABC de 5 lb minimo, con carga vigente y manometro en zona verde."
+  },
+  {
+    id: 8, key: "documentos", componente: "Documentacion Legal",
+    titulo: "DOCUMENTOS DE OPERACION",
+    pos: { left: 60, top: 35 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>',
+    pregunta: "¿Que documentos debe portar SIEMPRE el conductor durante la operacion del vehiculo?",
+    opciones: [
+      { txt: "Solo la licencia de conduccion", correcta: false },
+      { txt: "Licencia de conduccion, SOAT vigente, revision tecnico-mecanica y tarjeta de propiedad", correcta: true },
+      { txt: "Solo el SOAT y la cedula", correcta: false },
+      { txt: "Una fotocopia de la licencia es suficiente", correcta: false }
+    ],
+    explicacion: "Los 4 documentos son obligatorios y deben presentarse originales en cualquier control de transito."
+  },
+  {
+    id: 9, key: "triangulos", componente: "Señales de Emergencia",
+    titulo: "TRIANGULOS REFLECTIVOS",
+    pos: { left: 88, top: 78 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+    pregunta: "Si el vehiculo queda varado en una via abierta, ¿a que distancia se deben ubicar los triangulos reflectivos?",
+    opciones: [
+      { txt: "10 metros adelante y 10 metros atras", correcta: false },
+      { txt: "30 metros adelante y 30 metros atras del vehiculo", correcta: true },
+      { txt: "Solo es necesario uno detras del vehiculo", correcta: false },
+      { txt: "100 metros en linea recta detras del vehiculo", correcta: false }
+    ],
+    explicacion: "La norma exige 30 m adelante y 30 m atras para alertar a otros conductores a tiempo. En curva, antes de la curva."
+  },
+  {
+    id: 10, key: "limpia", componente: "Limpiaparabrisas",
+    titulo: "VISIBILIDAD EN MARCHA",
+    pos: { left: 47, top: 38 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M2 12c2-4 6-6 10-6s8 2 10 6"/><line x1="6" y1="20" x2="14" y2="6"/><circle cx="6" cy="20" r="1.5"/></svg>',
+    pregunta: "Durante la inspeccion preoperacional detectas que los limpiaparabrisas dejan rayas y no limpian bien. ¿Que debes hacer?",
+    opciones: [
+      { txt: "Iniciar la ruta porque no esta lloviendo en ese momento", correcta: false },
+      { txt: "Reportar la condicion, gestionar el cambio de plumillas antes de operar y no salir si hay riesgo de lluvia", correcta: true },
+      { txt: "Limpiar el parabrisas manualmente al detenerme", correcta: false },
+      { txt: "Cambiar el orden de las plumillas (izquierda por derecha)", correcta: false }
+    ],
+    explicacion: "La visibilidad es critica. Las plumillas deben cambiarse cada 6-12 meses y reportarse cualquier deficiencia en el preoperacional."
+  }
+];
+
+// ============================================================
+//  ESTADO DE LA APLICACION
+// ============================================================
+const STATE = {
+  pantalla: "access",
+  conectado: false,
+  player: {
+    nombre: "", cargo: "", cedula: "",
+    sala: "",
+    puntaje: 0, vidas: 3,
+    penalizaciones: 0,
+    tiempoInicio: 0, tiempoFinal: 0,
+    puntosCompletados: [], // array de keys
+    finalizado: false
+  },
+  juegoIniciado: false,
+  timerInterval: null,
+  pollingInterval: null,
+  audioCtx: null,
+  preguntaActual: null,
+  tiempoPreguntaInicio: 0
+};
+
+// ============================================================
+//  AUDIO SINTETIZADO (Web Audio API)
+// ============================================================
+function initAudio() {
+  try {
+    STATE.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  } catch (e) {
+    console.warn("Audio no soportado");
+  }
+}
+
+function playSound(type) {
+  if (!STATE.audioCtx) return;
+  if (STATE.audioCtx.state === "suspended") STATE.audioCtx.resume();
+
+  const ctx = STATE.audioCtx;
+  const now = ctx.currentTime;
+
+  if (type === "click") {
+    const osc = ctx.createOscillator(), g = ctx.createGain();
+    osc.connect(g); g.connect(ctx.destination);
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(220, now);
+    osc.frequency.exponentialRampToValueAtTime(660, now + 0.08);
+    g.gain.setValueAtTime(0.12, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+    osc.start(now); osc.stop(now + 0.1);
+  } else if (type === "correct") {
+    [523.25, 659.25, 783.99].forEach((f, i) => {
+      const osc = ctx.createOscillator(), g = ctx.createGain();
+      osc.connect(g); g.connect(ctx.destination);
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(f, now + i * 0.08);
+      g.gain.setValueAtTime(0.1, now + i * 0.08);
+      g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.25);
+      osc.start(now + i * 0.08); osc.stop(now + i * 0.08 + 0.25);
+    });
+  } else if (type === "error") {
+    const osc = ctx.createOscillator(), g = ctx.createGain();
+    osc.connect(g); g.connect(ctx.destination);
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(200, now);
+    osc.frequency.linearRampToValueAtTime(80, now + 0.35);
+    g.gain.setValueAtTime(0.18, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+    osc.start(now); osc.stop(now + 0.4);
+  } else if (type === "victory") {
+    [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
+      const osc = ctx.createOscillator(), g = ctx.createGain();
+      osc.connect(g); g.connect(ctx.destination);
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(f, now + i * 0.13);
+      g.gain.setValueAtTime(0.12, now + i * 0.13);
+      g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.13 + 0.3);
+      osc.start(now + i * 0.13); osc.stop(now + i * 0.13 + 0.3);
+    });
+  }
+}
+
+
+// ============================================================
+//  COMUNICACION CON APPS SCRIPT (con fallback local)
+// ============================================================
+async function llamarAPI(action, payload = {}, useGet = false) {
+  if (!APPS_SCRIPT_URL) {
+    // Modo local: simulacion
+    return modoLocal(action, payload);
+  }
+
+  try {
+    if (useGet) {
+      const params = new URLSearchParams({ action, ...payload });
+      const url = APPS_SCRIPT_URL + "?" + params.toString();
+      const resp = await fetch(url, { method: "GET" });
+      return await resp.json();
+    } else {
+      // POST con text/plain para evitar preflight CORS
+      const resp = await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action, ...payload })
+      });
+      return await resp.json();
+    }
+  } catch (e) {
+    console.warn("Fallo llamada al API, usando modo local. Detalle:", e);
+    setConexion(false);
+    return modoLocal(action, payload);
+  }
+}
+
+// Modo local cuando no hay URL configurada o falla la conexion
+function modoLocal(action, payload) {
+  if (action === "createRoom") {
+    const codigo = "LOCAL" + Math.floor(Math.random() * 90 + 10);
+    return Promise.resolve({ ok: true, codigo, jugador: { nombre: payload.creador, cargo: payload.cargo }, _local: true });
+  }
+  if (action === "joinRoom") {
+    return Promise.resolve({ ok: true, codigo: String(payload.room || "").toUpperCase(), jugador: { nombre: payload.nombre, cargo: payload.cargo }, _local: true });
+  }
+  if (action === "leaderboard") {
+    // Simulamos un leaderboard con bots
+    const yo = {
+      nombre: STATE.player.nombre || "(Tu)",
+      cargo: STATE.player.cargo || "",
+      estado: STATE.player.finalizado ? "Finalizado" : (STATE.juegoIniciado ? "Jugando" : "En espera"),
+      fase: STATE.player.finalizado ? "Finalizado" : (STATE.juegoIniciado ? "Inspeccion" : "Lobby"),
+      puntaje: STATE.player.puntaje,
+      tiempo: Math.floor((Date.now() - STATE.player.tiempoInicio) / 1000),
+      penalizaciones: STATE.player.penalizaciones,
+      vidas: STATE.player.vidas,
+      tiempoTotal: Math.floor((Date.now() - STATE.player.tiempoInicio) / 1000) + STATE.player.penalizaciones,
+      _esTu: true
+    };
+    const bots = [
+      { nombre: "Andres Quintero",   cargo: "Conductor",  estado: "Jugando",     fase: "Inspeccion", puntaje: 5, tiempo: 95,  penalizaciones: 10, vidas: 2, tiempoTotal: 105 },
+      { nombre: "Maria Castaño",     cargo: "Conductora", estado: "Finalizado",  fase: "Finalizado", puntaje: 10,tiempo: 142, penalizaciones: 0,  vidas: 3, tiempoTotal: 142 },
+      { nombre: "Jorge Bermudez",    cargo: "Operativo",  estado: "Jugando",     fase: "Inspeccion", puntaje: 3, tiempo: 73,  penalizaciones: 20, vidas: 1, tiempoTotal: 93 },
+      { nombre: "Sandra Galindo",    cargo: "Auxiliar",   estado: "En espera",   fase: "Lobby",      puntaje: 0, tiempo: 0,   penalizaciones: 0,  vidas: 3, tiempoTotal: 0 }
+    ];
+    return Promise.resolve({ ok: true, jugadores: [yo].concat(bots), total: 5, _local: true });
+  }
+  if (action === "updateProgress" || action === "submitAnswer" || action === "finishGame") {
+    return Promise.resolve({ ok: true, _local: true });
+  }
+  return Promise.resolve({ ok: false, error: "Accion no soportada en modo local: " + action });
+}
+
+function setConexion(conectado) {
+  STATE.conectado = conectado;
+  const dot  = document.getElementById("conn-dot");
+  const text = document.getElementById("conn-text");
+  if (conectado) {
+    dot.classList.remove("offline", "warn");
+    text.textContent = "En linea";
+    text.classList.remove("text-red-400", "text-amber-400");
+    text.classList.add("text-emerald-400");
+  } else {
+    dot.classList.add("offline");
+    dot.classList.remove("warn");
+    if (APPS_SCRIPT_URL) {
+      text.textContent = "Reconectando...";
+      text.classList.remove("text-emerald-400");
+      text.classList.add("text-amber-400");
+    } else {
+      text.textContent = "Modo Local";
+      text.classList.remove("text-emerald-400");
+      text.classList.add("text-amber-400");
+    }
+  }
+}
+
+// Verificar conexion al cargar
+async function verificarConexion() {
+  if (!APPS_SCRIPT_URL) {
+    setConexion(false);
+    return;
+  }
+  const resp = await llamarAPI("ping", {}, true);
+  setConexion(resp && resp.ok === true);
+}
+
+
+// ============================================================
+//  NAVEGACION ENTRE PANTALLAS
+// ============================================================
+function mostrarPantalla(id) {
+  ["screen-access", "screen-lobby", "screen-game", "screen-result"].forEach(s => {
+    const el = document.getElementById(s);
+    if (s === id) {
+      el.classList.remove("hidden");
+      el.classList.add("anim-slide-up");
+    } else {
+      el.classList.add("hidden");
+    }
+  });
+  STATE.pantalla = id.replace("screen-", "");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function setAccessTab(tab) {
+  playSound("click");
+  const tabJoin = document.getElementById("tab-join");
+  const tabCreate = document.getElementById("tab-create");
+  const formJoin = document.getElementById("form-join");
+  const formCreate = document.getElementById("form-create");
+
+  if (tab === "join") {
+    tabJoin.classList.add("btn-primary"); tabJoin.classList.remove("btn-ghost");
+    tabCreate.classList.add("btn-ghost"); tabCreate.classList.remove("btn-primary");
+    formJoin.classList.remove("hidden"); formJoin.classList.add("flex");
+    formCreate.classList.add("hidden"); formCreate.classList.remove("flex");
+  } else {
+    tabCreate.classList.add("btn-primary"); tabCreate.classList.remove("btn-ghost");
+    tabJoin.classList.add("btn-ghost"); tabJoin.classList.remove("btn-primary");
+    formCreate.classList.remove("hidden"); formCreate.classList.add("flex");
+    formJoin.classList.add("hidden"); formJoin.classList.remove("flex");
+  }
+}
+
+
+// ============================================================
+//  ACCIONES: CREAR SALA / UNIRSE
+// ============================================================
+async function accionCrear() {
+  initAudio(); playSound("click");
+  const nombre  = document.getElementById("create-nombre").value.trim();
+  const cargo   = document.getElementById("create-cargo").value.trim();
+  const cedula  = document.getElementById("create-cedula").value.trim();
+  const codigoS = document.getElementById("create-codigo").value.trim().toUpperCase();
+
+  if (!nombre) return mostrarError("create-error", "Debes ingresar tu nombre.");
+  if (nombre.length < 3) return mostrarError("create-error", "El nombre debe tener al menos 3 caracteres.");
+
+  const btn = document.getElementById("btn-create");
+  btn.disabled = true; btn.innerHTML = '<span class="anim-blink">CREANDO SALA...</span>';
+
+  const resp = await llamarAPI("createRoom", {
+    creador: nombre, cargo, cedula, codigoSugerido: codigoS
+  });
+
+  btn.disabled = false; btn.innerHTML = '<span class="flex items-center justify-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>Crear nueva sala</span>';
+
+  if (!resp.ok) return mostrarError("create-error", resp.error || "Error desconocido");
+
+  STATE.player.nombre = nombre;
+  STATE.player.cargo  = cargo;
+  STATE.player.cedula = cedula;
+  STATE.player.sala   = resp.codigo;
+
+  setConexion(!resp._local && APPS_SCRIPT_URL);
+  prepararLobby();
+}
+
+async function accionUnirse() {
+  initAudio(); playSound("click");
+  const nombre  = document.getElementById("join-nombre").value.trim();
+  const cargo   = document.getElementById("join-cargo").value.trim();
+  const cedula  = document.getElementById("join-cedula").value.trim();
+  const codigo  = document.getElementById("join-codigo").value.trim().toUpperCase();
+
+  if (!nombre) return mostrarError("join-error", "Debes ingresar tu nombre.");
+  if (nombre.length < 3) return mostrarError("join-error", "El nombre debe tener al menos 3 caracteres.");
+  if (!codigo)  return mostrarError("join-error", "Debes ingresar el codigo de sala.");
+
+  const btn = document.getElementById("btn-join");
+  btn.disabled = true; btn.innerHTML = '<span class="anim-blink">INGRESANDO A LA SALA...</span>';
+
+  const resp = await llamarAPI("joinRoom", {
+    room: codigo, nombre, cargo, cedula
+  });
+
+  btn.disabled = false;
+  btn.innerHTML = '<span class="flex items-center justify-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>Ingresar a la Sala</span>';
+
+  if (!resp.ok) return mostrarError("join-error", resp.error || "Error desconocido");
+
+  STATE.player.nombre = nombre;
+  STATE.player.cargo  = cargo;
+  STATE.player.cedula = cedula;
+  STATE.player.sala   = resp.codigo;
+
+  setConexion(!resp._local && APPS_SCRIPT_URL);
+  prepararLobby();
+}
+
+function mostrarError(id, msg) {
+  playSound("error");
+  const el = document.getElementById(id);
+  el.textContent = "» " + msg;
+  el.classList.remove("hidden");
+  setTimeout(() => el.classList.add("hidden"), 4500);
+}
+
+
+// ============================================================
+//  LOBBY
+// ============================================================
+function prepararLobby() {
+  document.getElementById("lobby-codigo").textContent = STATE.player.sala;
+  document.getElementById("lobby-player-name").textContent  = STATE.player.nombre;
+  document.getElementById("lobby-player-cargo").textContent = STATE.player.cargo || "—";
+  document.getElementById("game-room-code").textContent = STATE.player.sala;
+  mostrarPantalla("screen-lobby");
+  iniciarPolling("leaderboard-list", "lb-update", "lb-count");
+}
+
+function copiarCodigo() {
+  playSound("click");
+  const codigo = STATE.player.sala;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(codigo);
+  } else {
+    const tmp = document.createElement("textarea");
+    tmp.value = codigo; document.body.appendChild(tmp);
+    tmp.select(); document.execCommand("copy"); document.body.removeChild(tmp);
+  }
+  document.getElementById("copy-text").textContent = "Copiado!";
+  setTimeout(() => { document.getElementById("copy-text").textContent = "Copiar codigo"; }, 2000);
+}
+
+
+// ============================================================
+//  LEADERBOARD EN VIVO (polling cada 3s)
+// ============================================================
+async function actualizarLeaderboard(containerId, updateId, countId) {
+  const resp = await llamarAPI("leaderboard", { room: STATE.player.sala }, false);
+  if (!resp.ok) return;
+
+  setConexion(!resp._local && APPS_SCRIPT_URL);
+
+  const lista = resp.jugadores || [];
+  const cont  = document.getElementById(containerId);
+  if (!cont) return;
+
+  cont.innerHTML = "";
+
+  if (lista.length === 0) {
+    cont.innerHTML = '<div class="text-center py-10 text-slate-500 text-xs"><div class="anim-blink display-font text-lg">SIN CONDUCTORES</div></div>';
+  } else {
+    lista.forEach((j, i) => {
+      const esTu = j._esTu === true ||
+                   (j.nombre && STATE.player.nombre &&
+                    j.nombre.toLowerCase().trim() === STATE.player.nombre.toLowerCase().trim());
+      const row = document.createElement("div");
+      let rowClass = "lb-row";
+      if (esTu) rowClass += " me";
+      else if (j.estado === "Finalizado") rowClass += " finished";
+      else if (j.estado === "Descalificado") rowClass += " disq";
+      row.className = rowClass;
+
+      const rankClass = i === 0 ? "gold" : i === 1 ? "silver" : i === 2 ? "bronze" : "other";
+
+      let estadoLabel = j.estado || "—";
+      let estadoColor = "text-slate-400";
+      if (j.estado === "Finalizado")    { estadoColor = "text-emerald-400"; }
+      else if (j.estado === "Descalificado") { estadoColor = "text-red-400"; estadoLabel = "DESCAL."; }
+      else if (j.estado === "Jugando")  { estadoColor = "text-amber-400"; }
+
+      const tt = j.tiempoTotal || ((j.tiempo || 0) + (j.penalizaciones || 0));
+      const mm = Math.floor(tt / 60).toString().padStart(2, "0");
+      const ss = (tt % 60).toString().padStart(2, "0");
+
+      row.innerHTML = `
+        <div class="rank-badge ${rankClass}">${i + 1}</div>
+        <div class="flex-grow min-w-0">
+          <div class="font-bold text-sm text-white truncate">${escapeHtml(j.nombre || "—")} ${esTu ? '<span class="text-[10px] text-blue-400 ml-1">(tu)</span>' : ''}</div>
+          <div class="flex items-center gap-1.5 mt-0.5">
+            <span class="text-[10px] ${estadoColor} mono-font uppercase tracking-wider">${escapeHtml(estadoLabel)}</span>
+            <span class="text-[10px] text-slate-500">·</span>
+            <span class="text-[10px] text-slate-400 truncate">${escapeHtml(j.cargo || "—")}</span>
+          </div>
+        </div>
+        <div class="text-right flex-shrink-0">
+          <div class="mono-font font-bold text-sm text-white">${mm}:${ss}</div>
+          <div class="text-[10px] mono-font ${j.estado === "Finalizado" ? "text-emerald-400" : "text-slate-500"}">${j.puntaje || 0}/10 · -${j.vidas !== undefined ? (3 - j.vidas) : 0}❤</div>
+        </div>
+      `;
+      cont.appendChild(row);
+    });
+  }
+
+  const ahora = new Date();
+  const hh = ahora.getHours().toString().padStart(2, "0");
+  const mm2 = ahora.getMinutes().toString().padStart(2, "0");
+  const ss2 = ahora.getSeconds().toString().padStart(2, "0");
+  const updEl = document.getElementById(updateId);
+  if (updEl) updEl.textContent = hh + ":" + mm2 + ":" + ss2;
+  const cntEl = document.getElementById(countId);
+  if (cntEl) cntEl.textContent = lista.length;
+
+  // Si estamos en juego, actualizar tambien la otra lista
+  if (containerId === "leaderboard-list-game") {
+    document.getElementById("lobby-player-count") && (document.getElementById("lobby-player-count").textContent = lista.length);
+  } else {
+    const c = document.getElementById("lobby-player-count");
+    if (c) c.textContent = lista.length;
+  }
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, function(m) {
+    return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[m];
+  });
+}
+
+function iniciarPolling(containerId, updateId, countId) {
+  detenerPolling();
+  actualizarLeaderboard(containerId, updateId, countId);
+  STATE.pollingInterval = setInterval(() => {
+    let cid = "leaderboard-list", uid = "lb-update", ctid = "lb-count";
+    if (STATE.pantalla === "game") {
+      cid = "leaderboard-list-game"; uid = "lb-update-game"; ctid = "lb-count-game";
+    }
+    actualizarLeaderboard(cid, uid, ctid);
+  }, 3000);
+}
+
+function detenerPolling() {
+  if (STATE.pollingInterval) {
+    clearInterval(STATE.pollingInterval);
+    STATE.pollingInterval = null;
+  }
+}
+
+
+// ============================================================
+//  INICIAR JUEGO
+// ============================================================
+async function iniciarJuego() {
+  playSound("click");
+
+  STATE.juegoIniciado = true;
+  STATE.player.tiempoInicio = Date.now();
+  STATE.player.puntaje = 0;
+  STATE.player.vidas = 3;
+  STATE.player.penalizaciones = 0;
+  STATE.player.puntosCompletados = [];
+  STATE.player.finalizado = false;
+
+  renderHotspots();
+  actualizarStatsJuego();
+  document.getElementById("header-stats").classList.remove("hidden");
+  document.getElementById("header-stats").classList.add("flex");
+
+  // Iniciar cronometro
+  if (STATE.timerInterval) clearInterval(STATE.timerInterval);
+  STATE.timerInterval = setInterval(actualizarStatsJuego, 100);
+
+  // Cambiar pantalla
+  mostrarPantalla("screen-game");
+
+  // Reportar inicio
+  await llamarAPI("updateProgress", {
+    room: STATE.player.sala,
+    nombre: STATE.player.nombre,
+    estado: "Jugando",
+    fase: "Inspeccion",
+    puntaje: 0,
+    tiempo: 0,
+    penalizaciones: 0,
+    vidas: 3
+  });
+
+  // Polling sigue corriendo, solo cambiamos los targets
+  iniciarPolling("leaderboard-list-game", "lb-update-game", "lb-count-game");
+}
+
+function renderHotspots() {
+  const cont = document.getElementById("hotspots-container");
+  cont.innerHTML = "";
+  cont.style.pointerEvents = "none";
+
+  PUNTOS_CRITICOS.forEach(p => {
+    const hs = document.createElement("button");
+    hs.className = "hotspot";
+    hs.style.left = "calc(" + p.pos.left + "% - 19px)";
+    hs.style.top  = "calc(" + p.pos.top + "% - 19px)";
+    hs.style.pointerEvents = "auto";
+    hs.dataset.key = p.key;
+    hs.title = p.componente;
+    hs.innerHTML = `
+      <span class="ring"></span>
+      <span class="ring delay"></span>
+      <span class="core">${p.id}</span>
+    `;
+    hs.onclick = () => abrirPregunta(p);
+
+    if (STATE.player.puntosCompletados.includes(p.key)) {
+      hs.classList.add("done");
+    }
+
+    cont.appendChild(hs);
+  });
+}
+
+function actualizarStatsJuego() {
+  if (!STATE.player.tiempoInicio) return;
+
+  const elapsed = Math.floor((Date.now() - STATE.player.tiempoInicio) / 1000);
+  const mm = Math.floor(elapsed / 60).toString().padStart(2, "0");
+  const ss = (elapsed % 60).toString().padStart(2, "0");
+  const tStr = mm + ":" + ss;
+
+  const completados = STATE.player.puntosCompletados.length;
+  const progresoStr = completados + "/10";
+  const pen = "+" + STATE.player.penalizaciones + "s";
+  const vidaStr = STATE.player.vidas + "/3";
+
+  document.getElementById("game-time").textContent     = tStr;
+  document.getElementById("game-time-m").textContent   = tStr;
+  document.getElementById("game-pen").textContent      = pen;
+  document.getElementById("game-progress").textContent = progresoStr;
+  document.getElementById("game-progress-pill").textContent = progresoStr;
+  document.getElementById("game-lives").textContent    = vidaStr;
+  document.getElementById("game-lives-m").textContent  = vidaStr;
+  document.getElementById("header-time").textContent   = tStr;
+  document.getElementById("header-pen").textContent    = pen;
+  document.getElementById("header-lives").textContent  = vidaStr;
+
+  // Habilitar/deshabilitar boton finalizar
+  const btnFin = document.getElementById("btn-finalizar");
+  const hintFin = document.getElementById("btn-finalizar-hint");
+  if (completados >= 10) {
+    btnFin.disabled = false;
+    btnFin.classList.add("anim-blink");
+    hintFin.textContent = "Has completado los 10 puntos - finaliza para guardar tu marca";
+  }
+
+  // Actualizar progreso al server cada cierto tiempo (cada 5s aprox)
+  if (elapsed > 0 && elapsed % 5 === 0 && !STATE.player.finalizado) {
+    llamarAPI("updateProgress", {
+      room: STATE.player.sala,
+      nombre: STATE.player.nombre,
+      puntaje: STATE.player.puntaje,
+      tiempo: elapsed,
+      penalizaciones: STATE.player.penalizaciones,
+      vidas: STATE.player.vidas
+    });
+  }
+}
+
+
+// ============================================================
+//  MODAL DE PREGUNTA
+// ============================================================
+function abrirPregunta(punto) {
+  if (STATE.player.puntosCompletados.includes(punto.key)) {
+    playSound("error");
+    return;
+  }
+  playSound("click");
+  STATE.preguntaActual = punto;
+  STATE.tiempoPreguntaInicio = Date.now();
+
+  document.getElementById("modal-icon").innerHTML = punto.icon;
+  document.getElementById("modal-tag").textContent = "Punto " + punto.id + " de 10";
+  document.getElementById("modal-component").textContent = punto.componente.toUpperCase();
+  document.getElementById("modal-title").textContent = punto.titulo;
+  document.getElementById("modal-question-text").textContent = punto.pregunta;
+  document.getElementById("modal-feedback").classList.add("hidden");
+
+  const cont = document.getElementById("modal-options");
+  cont.innerHTML = "";
+  punto.opciones.forEach((op, i) => {
+    const letra = String.fromCharCode(65 + i); // A, B, C, D
+    const btn = document.createElement("button");
+    btn.className = "opt-btn";
+    btn.innerHTML = `
+      <span class="opt-letter">${letra}</span>
+      <span class="flex-grow text-sm">${escapeHtml(op.txt)}</span>
+    `;
+    btn.onclick = () => responderPregunta(i);
+    cont.appendChild(btn);
+  });
+
+  document.getElementById("modal-question").classList.remove("hidden");
+  document.getElementById("modal-question").classList.add("flex");
+}
+
+function cerrarModal() {
+  document.getElementById("modal-question").classList.add("hidden");
+  document.getElementById("modal-question").classList.remove("flex");
+  STATE.preguntaActual = null;
+}
+
+async function responderPregunta(idx) {
+  const punto = STATE.preguntaActual;
+  if (!punto) return;
+
+  const opciones = punto.opciones;
+  const esCorrecta = opciones[idx].correcta === true;
+  const tiempoRespuesta = Math.floor((Date.now() - STATE.tiempoPreguntaInicio) / 1000);
+
+  // Marcar opciones
+  const botones = document.querySelectorAll("#modal-options .opt-btn");
+  botones.forEach((b, i) => {
+    b.disabled = true;
+    if (opciones[i].correcta) b.classList.add("correct");
+    else if (i === idx) b.classList.add("wrong");
+  });
+
+  const fb = document.getElementById("modal-feedback");
+  fb.classList.remove("hidden");
+
+  if (esCorrecta) {
+    playSound("correct");
+    STATE.player.puntaje += 1;
+    STATE.player.puntosCompletados.push(punto.key);
+
+    fb.innerHTML = `
+      <div class="flex items-start gap-3">
+        <div class="w-9 h-9 rounded-lg bg-emerald-500 flex items-center justify-center flex-shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <div>
+          <div class="font-bold text-emerald-400 mb-1 uppercase tracking-wider text-xs">Respuesta Correcta</div>
+          <div class="text-slate-300 text-xs leading-relaxed">${escapeHtml(punto.explicacion)}</div>
+        </div>
+      </div>
+    `;
+    fb.style.background = "rgba(16, 185, 129, 0.08)";
+    fb.style.border = "1px solid rgba(16, 185, 129, 0.3)";
+  } else {
+    playSound("error");
+    STATE.player.vidas -= 1;
+    STATE.player.penalizaciones += 10;
+    STATE.player.puntosCompletados.push(punto.key); // Marca como visitado igualmente para que no se repita
+
+    fb.innerHTML = `
+      <div class="flex items-start gap-3">
+        <div class="w-9 h-9 rounded-lg bg-red-500 flex items-center justify-center flex-shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </div>
+        <div>
+          <div class="font-bold text-red-400 mb-1 uppercase tracking-wider text-xs">Respuesta Incorrecta · +10s</div>
+          <div class="text-slate-300 text-xs leading-relaxed">${escapeHtml(punto.explicacion)}</div>
+        </div>
+      </div>
+    `;
+    fb.style.background = "rgba(239, 68, 68, 0.08)";
+    fb.style.border = "1px solid rgba(239, 68, 68, 0.3)";
+  }
+
+  // Marcar hotspot
+  const hs = document.querySelector('#hotspots-container .hotspot[data-key="' + punto.key + '"]');
+  if (hs) {
+    hs.classList.add(esCorrecta ? "done" : "failed");
+  }
+
+  // Registrar respuesta en sheets
+  await llamarAPI("submitAnswer", {
+    room: STATE.player.sala,
+    nombre: STATE.player.nombre,
+    preguntaId: punto.id,
+    pregunta: punto.titulo,
+    respuestaSeleccionada: opciones[idx].txt,
+    respuestaCorrecta: (opciones.find(o => o.correcta) || {}).txt || "",
+    esCorrecta: esCorrecta,
+    tiempoRespuesta: tiempoRespuesta
+  });
+
+  // Actualizar stats
+  actualizarStatsJuego();
+
+  // Auto-cierre del modal
+  setTimeout(() => {
+    cerrarModal();
+
+    // Verificar si quedo sin vidas
+    if (STATE.player.vidas <= 0) {
+      finalizarJuego(true);
+    }
+  }, 3500);
+}
+
+
+// ============================================================
+//  FINALIZAR JUEGO
+// ============================================================
+async function finalizarJuego(descalificado = false) {
+  playSound(descalificado ? "error" : "victory");
+  STATE.player.finalizado = true;
+
+  if (STATE.timerInterval) {
+    clearInterval(STATE.timerInterval);
+    STATE.timerInterval = null;
+  }
+
+  const tiempoFinal = Math.floor((Date.now() - STATE.player.tiempoInicio) / 1000);
+  STATE.player.tiempoFinal = tiempoFinal;
+
+  // Renderizar resultados
+  const aciertos = STATE.player.puntaje;
+  const aprobado = !descalificado && aciertos >= 7;
+  const totalConPen = tiempoFinal + STATE.player.penalizaciones;
+
+  document.getElementById("result-score").textContent = aciertos + "/10";
+  document.getElementById("result-lives").textContent = STATE.player.vidas + "/3";
+  document.getElementById("result-pen").textContent   = STATE.player.penalizaciones + "s";
+
+  const mm = Math.floor(totalConPen / 60).toString().padStart(2, "0");
+  const ss = (totalConPen % 60).toString().padStart(2, "0");
+  document.getElementById("result-time").textContent = mm + ":" + ss;
+
+  const iconWrap = document.getElementById("result-icon-wrapper");
+  const icon = document.getElementById("result-icon");
+  const title = document.getElementById("result-title");
+  const subtitle = document.getElementById("result-subtitle");
+
+  if (aprobado) {
+    iconWrap.style.background = "linear-gradient(135deg, #10B981, #059669)";
+    icon.innerHTML = '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>';
+    title.textContent = "INSPECCION APROBADA";
+    title.classList.remove("text-red-400"); title.classList.add("text-white");
+    subtitle.textContent = "Has finalizado la capacitacion ludica del PESV. Tu resultado fue guardado.";
+  } else {
+    iconWrap.style.background = "linear-gradient(135deg, #EF4444, #991B1B)";
+    icon.innerHTML = '<path d="M12 2L2 22h20L12 2z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>';
+    title.textContent = descalificado ? "DESCALIFICADO" : "REQUIERE REFUERZO";
+    subtitle.textContent = descalificado
+      ? "Superaste el limite de fallos. Debes repetir la capacitacion."
+      : "Repasa los conceptos del PESV antes de operar el vehiculo.";
+  }
+
+  generarCertificado(aprobado, descalificado);
+  mostrarPantalla("screen-result");
+
+  // Guardar en sheets
+  const sync = document.getElementById("sync-text");
+  const syncDot = document.getElementById("sync-dot");
+  sync.textContent = "Guardando resultado...";
+
+  const resp = await llamarAPI("finishGame", {
+    room: STATE.player.sala,
+    nombre: STATE.player.nombre,
+    cargo: STATE.player.cargo,
+    cedula: STATE.player.cedula,
+    puntaje: aciertos,
+    tiempoTotal: tiempoFinal,
+    penalizaciones: STATE.player.penalizaciones,
+    vidas: STATE.player.vidas,
+    aprobado: aprobado
+  });
+
+  if (resp.ok) {
+    sync.textContent = APPS_SCRIPT_URL ? "Resultado guardado en la nube" : "Modo local · no se guardo en sheets";
+    syncDot.classList.remove("offline");
+  } else {
+    sync.textContent = "Error de sincronizacion - reintenta mas tarde";
+    syncDot.classList.add("offline");
+  }
+
+  // Mantener polling para ranking final
+  iniciarPolling("leaderboard-list-game", "lb-update-game", "lb-count-game");
+}
+
+
+// ============================================================
+//  CERTIFICADO (Canvas)
+// ============================================================
+function generarCertificado(aprobado, descalificado) {
+  const canvas = document.getElementById("cert-canvas");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+
+  // Fondo
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, "#0F1A2E");
+  grad.addColorStop(1, "#04060B");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Borde decorativo
+  ctx.strokeStyle = aprobado ? "#10B981" : "#EF4444";
+  ctx.lineWidth = 3;
+  ctx.strokeRect(20, 20, W - 40, H - 40);
+  ctx.strokeStyle = "#22D3EE"; ctx.lineWidth = 1; ctx.globalAlpha = 0.3;
+  ctx.strokeRect(30, 30, W - 60, H - 60);
+  ctx.globalAlpha = 1;
+
+  // Esquinas tipo blueprint
+  ctx.strokeStyle = "#F59E0B"; ctx.lineWidth = 2;
+  [[20,20], [W-50,20], [20,H-50], [W-50,H-50]].forEach(([x,y]) => {
+    ctx.beginPath();
+    ctx.moveTo(x, y + 15); ctx.lineTo(x, y); ctx.lineTo(x + 15, y);
+    ctx.stroke();
+  });
+
+  // Sello tipo radial superior izq
+  ctx.fillStyle = "#0066CC"; ctx.globalAlpha = 0.3;
+  ctx.beginPath(); ctx.arc(80, 90, 25, 0, Math.PI * 2); ctx.fill();
+  ctx.globalAlpha = 1;
+
+  // Titulo PAR SERVICIOS
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "bold 22px Outfit, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("PAR SERVICIOS DE INGENIERIA S.A.S.", W / 2, 75);
+
+  ctx.font = "12px Outfit, sans-serif";
+  ctx.fillStyle = "#98A8C0";
+  ctx.fillText("DEPARTAMENTO DE SEGURIDAD Y SALUD EN EL TRABAJO (SST)", W / 2, 95);
+
+  // Linea divisora
+  ctx.strokeStyle = "#142340"; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(80, 115); ctx.lineTo(W - 80, 115); ctx.stroke();
+
+  // Sub titulo
+  ctx.font = "bold 28px 'Bebas Neue', sans-serif";
+  ctx.fillStyle = aprobado ? "#F59E0B" : "#EF4444";
+  ctx.fillText(aprobado ? "CERTIFICADO CONDUCTOR SEGURO" : "CONSTANCIA DE ASISTENCIA", W / 2, 160);
+
+  // Texto principal
+  ctx.font = "14px Outfit, sans-serif";
+  ctx.fillStyle = "#E8EEF7";
+  ctx.fillText(aprobado ? "Se otorga la presente certificacion al colaborador:" : "Se hace constar que el colaborador:", W / 2, 200);
+
+  // Nombre
+  ctx.font = "bold 28px Outfit, sans-serif";
+  ctx.fillStyle = aprobado ? "#22D3EE" : "#FCA5A5";
+  ctx.fillText(STATE.player.nombre.toUpperCase(), W / 2, 240);
+
+  // Detalles
+  ctx.font = "13px Outfit, sans-serif";
+  ctx.fillStyle = "#98A8C0";
+  if (STATE.player.cedula) {
+    ctx.fillText("Identificado con C.C. " + STATE.player.cedula, W / 2, 265);
+  }
+
+  const totalConPen = STATE.player.tiempoFinal + STATE.player.penalizaciones;
+  ctx.font = "12px Outfit, sans-serif";
+  ctx.fillStyle = "#CBD5E1";
+
+  if (aprobado) {
+    ctx.fillText("Por haber aprobado la capacitacion interactiva del Plan Estrategico de Seguridad Vial (PESV)", W / 2, 305);
+    ctx.fillText("conforme a la Resolucion 40595 de 2022 del Ministerio de Transporte de Colombia.", W / 2, 325);
+
+    ctx.font = "bold 12px 'JetBrains Mono', monospace";
+    ctx.fillStyle = "#F59E0B";
+    ctx.fillText("MARCA DE CARRERA: " + totalConPen + " segundos  ·  ACIERTOS: " + STATE.player.puntaje + "/10  ·  SALA: " + STATE.player.sala, W / 2, 360);
+  } else {
+    ctx.fillText("Participo en la sesion ludica del PESV conforme a la Resolucion 40595 de 2022.", W / 2, 305);
+    ctx.fillText("Se recomienda reforzar los conceptos basicos antes de la operacion vehicular.", W / 2, 325);
+
+    ctx.font = "bold 12px 'JetBrains Mono', monospace";
+    ctx.fillStyle = "#EF4444";
+    ctx.fillText("MARCA: " + totalConPen + "s  ·  ACIERTOS: " + STATE.player.puntaje + "/10  ·  FALLOS: " + (3 - STATE.player.vidas) + "/3", W / 2, 360);
+  }
+
+  // Fecha y codigo
+  const fecha = new Date().toLocaleDateString("es-CO", { day: "2-digit", month: "long", year: "numeric" });
+  const codigoVer = "PAR-PESV-" + Math.floor(Math.random() * 90000 + 10000);
+  ctx.font = "italic 11px Outfit, sans-serif";
+  ctx.fillStyle = "#5A6B85";
+  ctx.fillText("Fecha de validacion: " + fecha + "  ·  Codigo verificador: " + codigoVer, W / 2, 410);
+
+  // Firma decorativa
+  ctx.font = "bold 10px 'JetBrains Mono', monospace";
+  ctx.fillStyle = aprobado ? "#10B981" : "#EF4444";
+  ctx.fillText("VERIFICADO SST · PAR SERVICIOS DE INGENIERIA S.A.S.", W / 2, 445);
+
+  // Iconos decorativos
+  ctx.strokeStyle = aprobado ? "#10B981" : "#EF4444";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(W - 90, H - 80, 28, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.font = "bold 11px 'Bebas Neue', sans-serif";
+  ctx.fillStyle = aprobado ? "#10B981" : "#EF4444";
+  ctx.textAlign = "center";
+  ctx.fillText(aprobado ? "APROBADO" : "NO APROBADO", W - 90, H - 76);
+}
+
+function descargarCertificado() {
+  playSound("click");
+  const canvas = document.getElementById("cert-canvas");
+  const link = document.createElement("a");
+  link.download = "Certificado_PESV_" + STATE.player.nombre.replace(/\s+/g, "_") + ".png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+
+function verRankingFinal() {
+  playSound("click");
+  document.getElementById("leaderboard-list-game").scrollIntoView({ behavior: "smooth" });
+}
+
+function reiniciarJuego() {
+  playSound("click");
+  detenerPolling();
+  STATE.player = {
+    nombre: "", cargo: "", cedula: "",
+    sala: "",
+    puntaje: 0, vidas: 3,
+    penalizaciones: 0,
+    tiempoInicio: 0, tiempoFinal: 0,
+    puntosCompletados: [],
+    finalizado: false
+  };
+  STATE.juegoIniciado = false;
+  document.getElementById("header-stats").classList.add("hidden");
+  document.getElementById("header-stats").classList.remove("flex");
+  document.getElementById("btn-finalizar").disabled = true;
+  document.getElementById("btn-finalizar").classList.remove("anim-blink");
+  document.getElementById("btn-finalizar-hint").textContent = "Completa los 10 puntos para finalizar";
+  mostrarPantalla("screen-access");
+}
+
+
+// ============================================================
+//  INICIALIZACION AL CARGAR
+// ============================================================
+window.addEventListener("DOMContentLoaded", () => {
+  setAccessTab("join");
+  verificarConexion();
+
+  // Reverificar conexion cada 30 segundos
+  setInterval(verificarConexion, 30000);
+
+  // Modal: cerrar con escape
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") cerrarModal();
+  });
+
+  // Modal: cerrar al click en backdrop (excepto en contenido)
+  document.getElementById("modal-question").addEventListener("click", e => {
+    if (e.target.id === "modal-question") cerrarModal();
+  });
+
+  // Inicializar audio al primer click
+  document.addEventListener("click", function once() {
+    initAudio();
+    document.removeEventListener("click", once);
+  }, { once: true });
+});
+
+// Limpiar al cerrar
+window.addEventListener("beforeunload", () => {
+  detenerPolling();
+});
+</script>
+
+</body>
+</html>
