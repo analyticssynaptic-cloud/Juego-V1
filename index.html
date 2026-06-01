@@ -340,6 +340,13 @@
     display: flex; align-items: center; justify-content: center;
     padding: 16px;
     animation: slideUp .25s ease-out;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .modal-backdrop > div {
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   /* Status pills */
@@ -405,14 +412,23 @@
     .display-font.text-3xl { font-size: 1.4rem !important; }
     .display-font.text-4xl { font-size: 1.65rem !important; }
     .panel, .panel-elevated { padding: 12px !important; border-radius: 14px !important; }
-    .hotspot { width: 32px !important; height: 32px !important; }
+    .hotspot { width: 38px !important; height: 38px !important; }
     .hotspot .core { font-size: 10px !important; inset: 7px !important; }
-    .modal-backdrop { padding: 8px !important; }
-    .opt-btn { padding: 10px 11px !important; font-size: 12.5px !important; }
+    .modal-backdrop { padding: 6px !important; }
+    .modal-backdrop > div { max-height: calc(100vh - 16px) !important; padding: 14px !important; }
+    .opt-btn { padding: 11px 10px !important; font-size: 12.5px !important; min-height: 48px !important; line-height: 1.3 !important; }
     .opt-btn .opt-letter { width: 24px !important; height: 24px !important; font-size: 10.5px !important; }
     .stat-value { font-size: 0.95rem !important; }
     .stat-label { font-size: 8.5px !important; }
+    /* Inputs no deben hacer zoom en iOS */
+    input, select, textarea { font-size: 16px !important; }
+    /* Mejor area de toque para botones */
+    button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   }
+
+  /* Prevenir zoom en doble tap (mobile) */
+  * { -webkit-tap-highlight-color: rgba(0,0,0,0); }
+  button, .hotspot { touch-action: manipulation; }
 
   /* Posicionado layout principal */
   .app-grid {
@@ -633,7 +649,7 @@
           </h2>
           <p class="text-slate-400 text-sm leading-relaxed max-w-md">
             Capacitacion gamificada multijugador del Plan Estrategico de Seguridad Vial.
-            Inspecciona los 13 puntos criticos (vehiculo, peaton y emergencia), responde correctamente y
+            Responde 15 preguntas situacionales (peaton, conductor, emergencia), responde correctamente y
             compite en tiempo real con tu equipo.
           </p>
 
@@ -851,7 +867,7 @@
               </div>
               <div>
                 <div class="text-sm font-bold text-white">Tiempo neto</div>
-                <div class="text-xs text-slate-400 mt-0.5">El cronometro arranca al iniciar la inspeccion y solo se detiene al finalizar los 13 puntos.</div>
+                <div class="text-xs text-slate-400 mt-0.5">El cronometro arranca al iniciar la inspeccion y solo se detiene al finalizar los 15 puntos.</div>
               </div>
             </div>
 
@@ -1048,7 +1064,47 @@
               <line x1="60" y1="420" x2="1040" y2="420"/>
             </g>
 
-            <!-- ============ ZONA-A: PASO PEATONAL (lado izquierdo) ============ -->
+            <!-- ============ ZONA-A: PASO PEATONAL + TRANSPORTE PUBLICO + ACERA NOCHE ============ -->
+
+            <!-- BUS DE TRANSPORTE PUBLICO (esquina superior izquierda) -->
+            <g transform="translate(70, 130)">
+              <!-- Cuerpo del bus -->
+              <rect x="0" y="0" width="200" height="80" rx="6" fill="#0EA5E9" stroke="#0C4A6E" stroke-width="1.5" opacity="0.95"/>
+              <!-- Linea decorativa amarilla -->
+              <rect x="0" y="38" width="200" height="6" fill="#FCD34D"/>
+              <!-- Ventanas -->
+              <rect x="10" y="10" width="35" height="22" rx="2" fill="#67E8F9" opacity="0.7" stroke="#0C4A6E" stroke-width="0.6"/>
+              <rect x="50" y="10" width="35" height="22" rx="2" fill="#67E8F9" opacity="0.7" stroke="#0C4A6E" stroke-width="0.6"/>
+              <rect x="90" y="10" width="35" height="22" rx="2" fill="#67E8F9" opacity="0.7" stroke="#0C4A6E" stroke-width="0.6"/>
+              <rect x="130" y="10" width="35" height="22" rx="2" fill="#67E8F9" opacity="0.7" stroke="#0C4A6E" stroke-width="0.6"/>
+              <!-- Parabrisas del bus -->
+              <rect x="170" y="10" width="25" height="22" rx="2" fill="#FEF3C7" opacity="0.7" stroke="#0C4A6E" stroke-width="0.6"/>
+              <!-- Puerta -->
+              <rect x="155" y="46" width="20" height="30" rx="1" fill="#0C4A6E" stroke="#67E8F9" stroke-width="0.5"/>
+              <line x1="165" y1="46" x2="165" y2="76" stroke="#67E8F9" stroke-width="0.5"/>
+              <!-- Ruedas del bus -->
+              <circle cx="35" cy="82" r="10" fill="#0F172A" stroke="#475569" stroke-width="1.5"/>
+              <circle cx="35" cy="82" r="5" fill="#475569"/>
+              <circle cx="160" cy="82" r="10" fill="#0F172A" stroke="#475569" stroke-width="1.5"/>
+              <circle cx="160" cy="82" r="5" fill="#475569"/>
+              <!-- Letrero BUS -->
+              <rect x="60" y="50" width="80" height="18" rx="2" fill="#0F172A"/>
+              <text x="100" y="63" text-anchor="middle" font-family="Bebas Neue" font-size="13" font-weight="700" fill="#FCD34D">BUS SEGURO</text>
+            </g>
+
+            <!-- FAROL DE NOCHE (acera izquierda extrema) -->
+            <g transform="translate(40, 250)">
+              <!-- Poste -->
+              <rect x="2" y="60" width="3" height="90" fill="#475569"/>
+              <!-- Curva arriba -->
+              <path d="M 3.5 60 Q 3.5 30 30 30" stroke="#475569" stroke-width="3" fill="none"/>
+              <!-- Lampara -->
+              <ellipse cx="30" cy="38" rx="9" ry="6" fill="#FCD34D" opacity="0.95"/>
+              <ellipse cx="30" cy="38" rx="6" ry="4" fill="#FFFBEB"/>
+              <!-- Halo de luz -->
+              <ellipse cx="30" cy="38" rx="22" ry="14" fill="url(#headLight)" opacity="0.4"/>
+            </g>
+
             <!-- Banco peatonal / acera -->
             <rect x="50" y="320" width="290" height="60" fill="#1F2937" stroke="#22D3EE" stroke-opacity="0.35" stroke-width="0.8"/>
             <!-- Bordillo -->
@@ -1084,20 +1140,23 @@
               </g>
             </g>
 
-            <!-- PEATON cruzando -->
+            <!-- PEATON cruzando con celular (distraccion) -->
             <g transform="translate(220, 295)">
               <!-- Cabeza -->
               <circle cx="0" cy="0" r="10" fill="#FDE68A" stroke="#0F172A" stroke-width="1"/>
               <!-- Pelo -->
               <path d="M -10 -2 Q -8 -10 0 -10 Q 8 -10 10 -2 L 9 0 Q 5 -5 0 -5 Q -5 -5 -9 0 Z" fill="#451A03"/>
-              <!-- Torso (chaqueta verde) -->
+              <!-- Torso -->
               <path d="M -12 10 Q -10 6 -7 6 L 7 6 Q 10 6 12 10 L 14 38 Q 6 42 0 42 Q -6 42 -14 38 Z" fill="#15803D" stroke="#052E16" stroke-width="1"/>
               <!-- Brazos -->
               <path d="M -12 12 L -18 32 L -15 33 L -9 16 Z" fill="#15803D" stroke="#052E16" stroke-width="0.8"/>
               <path d="M 12 12 L 18 32 L 15 33 L 9 16 Z" fill="#15803D" stroke="#052E16" stroke-width="0.8"/>
-              <!-- Mano con celular (distraccion) -->
+              <!-- Mano con celular -->
               <rect x="14" y="28" width="7" height="11" rx="1.5" fill="#0F172A" stroke="#22D3EE" stroke-opacity="0.7" stroke-width="0.8"/>
               <rect x="15" y="30" width="5" height="6" fill="#3B82F6" opacity="0.8"/>
+              <!-- Mochila grande visible en la espalda -->
+              <rect x="-14" y="14" width="6" height="18" rx="1.5" fill="#7F1D1D" stroke="#0F172A" stroke-width="0.7"/>
+              <rect x="-13" y="16" width="4" height="3" fill="#FCA5A5"/>
               <!-- Piernas -->
               <rect x="-9" y="40" width="7" height="32" fill="#1E40AF" stroke="#0F172A" stroke-width="0.8"/>
               <rect x="2" y="40" width="7" height="32" fill="#1E40AF" stroke="#0F172A" stroke-width="0.8"/>
@@ -1336,7 +1395,7 @@
               FINALIZAR INSPECCION
             </span>
           </button>
-          <p class="text-[10px] text-slate-500 mt-1.5" id="btn-finalizar-hint">Completa los 13 puntos para finalizar</p>
+          <p class="text-[10px] text-slate-500 mt-1.5" id="btn-finalizar-hint">Completa los 15 puntos para finalizar</p>
         </div>
       </div>
 
@@ -1473,7 +1532,7 @@
       <div class="space-y-3 text-sm text-slate-300 leading-relaxed">
         <div class="flex gap-3 items-start">
           <span class="mono-font text-amber-400 font-bold flex-shrink-0">01</span>
-          <p>Veras un <strong class="text-white">escenario PESV completo</strong> con <strong class="text-amber-400">13 puntos clasificados por color</strong> que cubren las tres zonas del Plan: <strong>peaton</strong>, <strong>vehiculo</strong> y <strong>emergencia</strong>.</p>
+          <p>Veras un <strong class="text-white">escenario PESV completo</strong> con <strong class="text-amber-400">15 preguntas clasificadas por color</strong> que cubren las tres zonas del Plan: <strong>peaton</strong>, <strong>vehiculo</strong> y <strong>emergencia</strong>.</p>
         </div>
         <div class="flex gap-3 items-start">
           <span class="mono-font text-amber-400 font-bold flex-shrink-0">02</span>
@@ -1513,7 +1572,7 @@
         </div>
         <div class="flex gap-3 items-start">
           <span class="mono-font text-amber-400 font-bold flex-shrink-0">06</span>
-          <p>Completa los <strong class="text-white">13 puntos</strong> y haz click en <strong class="text-cyan-400">FINALIZAR</strong> para registrar tu marca. Apruebas con <strong>9 o mas aciertos sobre 13</strong>.</p>
+          <p>Completa los <strong class="text-white">15 preguntas</strong> y haz click en <strong class="text-cyan-400">FINALIZAR</strong> para registrar tu marca. Apruebas con <strong>11 o mas aciertos sobre 15</strong>.</p>
         </div>
         <div class="flex gap-3 items-start">
           <span class="mono-font text-amber-400 font-bold flex-shrink-0">07</span>
@@ -1553,7 +1612,7 @@
         </div>
         <div class="flex-grow">
           <div class="flex items-center gap-2 mb-1">
-            <span class="pill pill-amber" id="modal-tag">Punto 1 de 13</span>
+            <span class="pill pill-amber" id="modal-tag">Punto 1 de 15</span>
             <span class="text-[10px] mono-font text-cyan-400 uppercase tracking-wider" id="modal-component">COMPONENTE</span>
           </div>
           <h3 id="modal-title" class="display-font text-2xl text-white tracking-wide leading-tight">TITULO</h3>
@@ -1629,199 +1688,228 @@
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwoI4v4_k22UnABJIgJOcIs_l6JYzwn7sEQRKJs8wrZtKXw6EnHIG3f5kNBzIUDM8Ob6A/exec"; // <-- PEGAR URL AQUI
 
 // ============================================================
-//  CATALOGO DE 12 PREGUNTAS PESV - PUNTOS CRITICOS EN 3 ZONAS
-//  Categorias: "conductor" (amarillo), "peaton" (cyan), "emergencia" (verde-rojo)
+//  CATALOGO DE 15 PREGUNTAS PESV - Cuestionario oficial PAR Servicios
+//  Categorias: "conductor" (amarillo), "peaton" (cyan), "emergencia" (rojo), "otros" (morado)
 //  Coordenadas (left, top) en porcentaje sobre el viewBox 1100x520
 // ============================================================
 const PUNTOS_CRITICOS = [
-  // ============== ZONA-B: CONDUCTOR / VEHICULO ==============
+
+  // ============== PEATON (5 preguntas - cyan) ==============
   {
-    id: 1, key: "luces", componente: "Faros Delanteros", categoria: "conductor",
-    titulo: "SISTEMA DE ILUMINACION",
-    pos: { left: 83.5, top: 59 },
-    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.3 4.5 3 5.7V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.3c1.7-1.2 3-3.3 3-5.7a7 7 0 0 0-7-7zM9 21h6M10 18h4"/></svg>',
-    pregunta: "Segun el PESV, parte de la revision preoperacional incluye verificar luces, frenos, llantas y kit de emergencias. ¿Con que frecuencia debe hacerse esta inspeccion?",
+    id: 1, key: "peaton-celular", componente: "Peaton con Celular", categoria: "peaton",
+    titulo: "CRUZAR LA VIA CON LLAMADA",
+    pos: { left: 20, top: 62 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/><line x1="3" y1="3" x2="21" y2="21"/></svg>',
+    pregunta: "Si vas caminando al trabajo y necesitas cruzar una avenida muy transitada, ¿que deberias hacer si estas recibiendo una llamada importante en tu celular?",
     opciones: [
-      { txt: "Solo cuando se enciende un testigo en el tablero", correcta: false },
-      { txt: "Una vez por semana en la oficina", correcta: false },
-      { txt: "Diariamente, antes de cada salida o jornada", correcta: true },
-      { txt: "Solo cuando el vehiculo va al taller", correcta: false }
+      { txt: "Cruzar rapidamente mientras contesto la llamada para no perder tiempo", correcta: false },
+      { txt: "Ignorar la llamada, guardar el celular y cruzar la via usando los pasos peatonales demarcados sin distracciones", correcta: true },
+      { txt: "Contestar la llamada y cruzar lentamente asegurandome de mirar a ambos lados", correcta: false },
+      { txt: "Pedirle a otro peaton que me guie para cruzar mientras sigo hablando por telefono", correcta: false }
     ],
-    explicacion: "La Resolucion 40592 (responsabilidades del conductor) y el PESV exigen revision preoperacional ANTES DE CADA SALIDA: frenos, llantas, luces, kit de emergencias y carretera."
+    explicacion: "El Peaton Seguro: la atencion plena salva vidas. Guarda el celular, evita distracciones (audifonos, llamadas) y cruza siempre por pasos peatonales demarcados."
   },
   {
-    id: 2, key: "frenos", componente: "Sistema de Frenos", categoria: "conductor",
-    titulo: "CONTROL DE FRENADO",
-    pos: { left: 50, top: 74 },
-    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><path d="M3 12a9 9 0 0 1 18 0"/></svg>',
-    pregunta: "Durante el preoperacional notas que al frenar el vehiculo tira hacia un lado. ¿Cual es la accion correcta segun el PESV?",
+    id: 2, key: "peaton-vehiculos", componente: "Vehiculos Bloqueando Vista", categoria: "peaton",
+    titulo: "CRUZAR CON VISTA BLOQUEADA",
+    pos: { left: 30, top: 86 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>',
+    pregunta: "Estas a punto de cruzar una calle, pero hay varios vehiculos estacionados bloqueando tu vista hacia la esquina. ¿Como actuas como peaton responsable?",
     opciones: [
-      { txt: "Continuar la ruta y reportar al final del dia", correcta: false },
-      { txt: "Detener la operacion, reportar inmediatamente y no movilizar el vehiculo hasta su revision", correcta: true },
-      { txt: "Manejar mas despacio y compensar con el volante", correcta: false },
-      { txt: "Esperar a que el problema empeore para justificar el taller", correcta: false }
+      { txt: "Cruzo rapido entre los vehiculos estacionados para pasar antes de que venga otro carro", correcta: false },
+      { txt: "Me asomo un poco entre los carros para ver y si no viene nadie, cruzo por ahi mismo", correcta: false },
+      { txt: "Busco una zona demarcada para peatones, evitando cruzar entre los vehiculos estacionados, y hago contacto visual con los conductores", correcta: true },
+      { txt: "Espero a que otro peaton cruce primero para seguirlo y usarlo como escudo", correcta: false }
     ],
-    explicacion: "Cualquier anomalia en el sistema de frenos es CRITICA. La operacion debe detenerse inmediatamente y reportarse al supervisor / responsable de SST."
+    explicacion: "Nunca cruzar entre vehiculos estacionados: reducen la visibilidad mutua con los conductores. Usar zonas demarcadas y siempre hacer contacto visual antes de cruzar."
   },
   {
-    id: 3, key: "cinturon", componente: "Cinturon de Seguridad", categoria: "conductor",
-    titulo: "RETENCION OBLIGATORIA",
-    pos: { left: 64, top: 56 },
-    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M20 12c0 5-3 8-8 8s-8-3-8-8 3-8 8-8 8 3 8 8z"/><path d="M9 9l6 6M15 9l-6 6"/></svg>',
-    pregunta: "¿En que casos NO es obligatorio el uso del cinturon de seguridad para los ocupantes del vehiculo?",
+    id: 3, key: "abordar-bus", componente: "Abordar Transporte Publico", categoria: "peaton",
+    titulo: "SUBIR AL BUS LLENO",
+    pos: { left: 21, top: 33 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M8 6v6"/><path d="M16 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>',
+    pregunta: "Al momento de abordar un bus de transporte publico que llega bastante lleno, ¿cual es la mejor accion de seguridad y cortesia al abrirse las puertas?",
     opciones: [
-      { txt: "Nunca; es obligatorio para todos los ocupantes en todo momento y en cualquier via", correcta: true },
-      { txt: "Cuando se circula a baja velocidad dentro de la ciudad", correcta: false },
-      { txt: "Para los pasajeros que van en el asiento trasero", correcta: false },
-      { txt: "Cuando el recorrido es de menos de 5 minutos", correcta: false }
+      { txt: "Entrar lo mas rapido posible para alcanzar uno de los pocos asientos libres", correcta: false },
+      { txt: "Dejar salir primero a los pasajeros que van a bajarse antes de intentar entrar al bus", correcta: true },
+      { txt: "Quedarme parado en la puerta para asegurar mi lugar mientras los demas bajan por otra puerta", correcta: false },
+      { txt: "Subir inmediatamente e ir empujando suavemente hacia el fondo del bus", correcta: false }
     ],
-    explicacion: "Resolucion 40592 - Responsabilidades del conductor: usar SIEMPRE el cinturon de seguridad y EXIGIR su uso a los pasajeros, sin excepcion."
+    explicacion: "Guia interactiva para el peaton y transporte publico: deja salir antes de entrar. Eso fluidiza el abordaje, previene tropezones y respeta a los demas usuarios."
   },
   {
-    id: 4, key: "espejo", componente: "Espejos Retrovisores", categoria: "conductor",
-    titulo: "ELIMINACION DE PUNTO CIEGO",
-    pos: { left: 55, top: 43 },
-    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>',
-    pregunta: "El \"punto ciego\" del vehiculo se define como:",
+    id: 4, key: "mochila-bus", componente: "Mochila en Transporte", categoria: "peaton",
+    titulo: "MOCHILA EN BUS LLENO",
+    pos: { left: 11, top: 43 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M4 10a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10z"/><path d="M9 6V4a3 3 0 0 1 6 0v2"/><path d="M8 14h8"/></svg>',
+    pregunta: "Vas de pie en el transporte publico con una mochila grande en la espalda. Para viajar de manera segura y cuidar el entorno, ¿que medida adoptas con tu equipaje?",
     opciones: [
-      { txt: "El area frontal cubierta por la columna del parabrisas", correcta: false },
-      { txt: "El area alrededor del vehiculo que NO es visible por los espejos retrovisores", correcta: true },
-      { txt: "La zona detras del vehiculo durante la noche", correcta: false },
-      { txt: "Cualquier zona con niebla o lluvia intensa", correcta: false }
+      { txt: "Me la dejo puesta en la espalda pero me apoyo en una pared para no molestar", correcta: false },
+      { txt: "La pongo en el suelo entre mis piernas para que nadie se tropiece", correcta: false },
+      { txt: "Me quito la mochila de la espalda y la mantengo al frente mio", correcta: true },
+      { txt: "Le pido a alguien que vaya sentado que me la sostenga en sus piernas", correcta: false }
     ],
-    explicacion: "El punto ciego es el area no cubierta por espejos. Antes de cambiar de carril es obligatorio girar la cabeza para verificarlo y proteger a peatones y otros vehiculos."
+    explicacion: "Manten tu mochila al frente: evitas golpear a otros pasajeros, reduces el espacio que ocupas y proteges tus pertenencias de robos."
   },
   {
-    id: 5, key: "alcohol", componente: "Alcohol y Sustancias", categoria: "conductor",
-    titulo: "CONDUCCION RESPONSABLE",
-    pos: { left: 75, top: 56 },
-    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M8 2h8l-1 4H9z"/><path d="M9 6l-2 14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2L15 6"/><line x1="4" y1="4" x2="20" y2="20"/></svg>',
-    pregunta: "Segun las responsabilidades del conductor PESV, ¿que esta prohibido ANTES Y DURANTE la conduccion?",
+    id: 5, key: "peaton-noche", componente: "Caminar de Noche", categoria: "peaton",
+    titulo: "VISIBILIDAD NOCTURNA",
+    pos: { left: 6, top: 60 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
+    pregunta: "Finalizas tu turno de trabajo en la noche y debes caminar por una calle de escasa iluminacion. Como peaton, ¿que decision reduce drasticamente tu vulnerabilidad?",
     opciones: [
-      { txt: "Comer dentro del vehiculo", correcta: false },
-      { txt: "Consumir alcohol o sustancias psicoactivas", correcta: true },
-      { txt: "Escuchar musica suave a bajo volumen", correcta: false },
-      { txt: "Conducir con aire acondicionado encendido", correcta: false }
+      { txt: "Caminar sobre el carril vehicular en lugar del anden para observar mejor los autos que se acercan", correcta: false },
+      { txt: "Vestir indumentaria oscura para pasar desapercibido por motivos de seguridad frente a la delincuencia", correcta: false },
+      { txt: "Encender la linterna del celular apuntandola directamente hacia el rostro de los conductores para que paren", correcta: false },
+      { txt: "Utilizar ropa de colores claros o accesorios reflectantes, cruzando solo por esquinas iluminadas y haciendo contacto visual", correcta: true }
     ],
-    explicacion: "Resolucion 40592: abstenerse de consumir alcohol o sustancias psicoactivas antes y durante la conduccion. El incumplimiento conlleva sanciones disciplinarias y legales."
-  },
-  {
-    id: 6, key: "documentos", componente: "Documentacion Legal", categoria: "conductor",
-    titulo: "DOCUMENTOS DE OPERACION",
-    pos: { left: 66, top: 38 },
-    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>',
-    pregunta: "¿Que documentos debe portar SIEMPRE el conductor durante la operacion del vehiculo?",
-    opciones: [
-      { txt: "Solo la licencia de conduccion", correcta: false },
-      { txt: "Licencia de conduccion, SOAT vigente, revision tecnico-mecanica y tarjeta de propiedad", correcta: true },
-      { txt: "Solo el SOAT y la cedula", correcta: false },
-      { txt: "Una fotocopia de la licencia es suficiente", correcta: false }
-    ],
-    explicacion: "Los 4 documentos son obligatorios: licencia vigente acorde al tipo de vehiculo, SOAT, revision tecnico-mecanica y tarjeta de propiedad. Originales en cualquier control."
-  },
-  {
-    id: 7, key: "limpia", componente: "Limpiaparabrisas", categoria: "conductor",
-    titulo: "VISIBILIDAD EN MARCHA",
-    pos: { left: 70, top: 36 },
-    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M2 12c2-4 6-6 10-6s8 2 10 6"/><line x1="6" y1="20" x2="14" y2="6"/><circle cx="6" cy="20" r="1.5"/></svg>',
-    pregunta: "Durante la inspeccion preoperacional detectas que los limpiaparabrisas dejan rayas y no limpian bien. ¿Que debes hacer?",
-    opciones: [
-      { txt: "Iniciar la ruta porque no esta lloviendo en ese momento", correcta: false },
-      { txt: "Reportar la condicion, gestionar el cambio de plumillas antes de operar y no salir si hay riesgo de lluvia", correcta: true },
-      { txt: "Limpiar el parabrisas manualmente al detenerme", correcta: false },
-      { txt: "Cambiar el orden de las plumillas (izquierda por derecha)", correcta: false }
-    ],
-    explicacion: "La visibilidad es critica. Las plumillas deben cambiarse cada 6-12 meses y reportarse cualquier deficiencia en el preoperacional."
+    explicacion: "Se visible de noche: ropa clara o reflectante, esquinas iluminadas y contacto visual. La iluminacion adecuada al cruzar es tu primera linea de defensa."
   },
 
-  // ============== ZONA-C: EMERGENCIA ==============
+  // ============== CONDUCTOR (4 preguntas - amarillo) ==============
   {
-    id: 8, key: "botiquin", componente: "Botiquin / Kit Emergencias", categoria: "emergencia",
-    titulo: "KIT DE PRIMEROS AUXILIOS",
-    pos: { left: 44, top: 68 },
-    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>',
-    pregunta: "¿Cuales son los elementos MINIMOS que debe contener el botiquin de primeros auxilios del vehiculo?",
+    id: 6, key: "preoperacional", componente: "Revision Preoperacional", categoria: "conductor",
+    titulo: "INSPECCION ANTES DE ARRANCAR",
+    pos: { left: 84, top: 60 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+    pregunta: "Es lunes por la mañana y debes realizar una salida en el vehiculo asignado por la empresa. Antes de arrancar el motor, ¿que accion preventiva es obligatoria?",
     opciones: [
-      { txt: "Solo gasas y curitas", correcta: false },
-      { txt: "Gasas, vendas, antisepticos, guantes desechables y tijeras", correcta: true },
-      { txt: "Medicamentos para el dolor y la fiebre", correcta: false },
-      { txt: "Equipo de sutura y bisturi", correcta: false }
+      { txt: "Revisar unicamente que haya suficiente gasolina para el trayecto planeado", correcta: false },
+      { txt: "Encender el vehiculo y arrancar despacio para calentar el motor mientras acomodo los espejos", correcta: false },
+      { txt: "Realizar la revision preoperacional del vehiculo, verificando frenos, llantas, luces y el kit de emergencias", correcta: true },
+      { txt: "Llamar al responsable de mantenimiento para preguntarle cuando fue la ultima revision general", correcta: false }
     ],
-    explicacion: "El botiquin basico incluye material de curacion: gasas, vendas, antisepticos, guantes, tijeras. NUNCA debe contener medicamentos sin prescripcion."
+    explicacion: "Responsabilidad del conductor (Res. 40592): revision preoperacional ANTES DE CADA SALIDA: frenos, llantas, luces, kit de emergencias y carretera."
   },
   {
-    id: 9, key: "triangulos", componente: "Triangulos Reflectivos", categoria: "emergencia",
-    titulo: "SEÑALES DE EMERGENCIA",
+    id: 7, key: "llamada-conduciendo", componente: "Llamada al Conducir", categoria: "conductor",
+    titulo: "DISTRACCION EN MARCHA",
+    pos: { left: 66, top: 36 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/><line x1="2" y1="2" x2="22" y2="22"/></svg>',
+    pregunta: "Vas conduciendo tu vehiculo propio en una mision laboral y recibes una llamada de la oficina. ¿Cual es la forma correcta de actuar segun las normativas viales?",
+    opciones: [
+      { txt: "Contestar rapidamente para indicar que voy conduciendo y colgar de inmediato", correcta: false },
+      { txt: "Abstenerme de usar el telefono, ignorando la llamada o deteniendome en un lugar seguro antes de contestar", correcta: true },
+      { txt: "Poner el celular en altavoz y sostenerlo cerca de la cara para no perder de vista la via", correcta: false },
+      { txt: "Pedirle a un pasajero que sostenga mi telefono en mi oido mientras yo manejo", correcta: false }
+    ],
+    explicacion: "Responsabilidad del conductor: NO usar telefonos moviles u otros dispositivos que generen distraccion durante la conduccion. Detente en un lugar seguro si necesitas contestar."
+  },
+  {
+    id: 8, key: "cinturon-pasajeros", componente: "Cinturon Pasajeros", categoria: "conductor",
+    titulo: "CINTURON OBLIGATORIO",
+    pos: { left: 71, top: 56 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M20 12c0 5-3 8-8 8s-8-3-8-8 3-8 8-8 8 3 8 8z"/><path d="M9 9l6 6M15 9l-6 6"/></svg>',
+    pregunta: "Vas a transportar a varios compañeros de trabajo en los asientos traseros de un auto corporativo. ¿Que regla de seguridad innegociable recae sobre ti como conductor antes de arrancar?",
+    opciones: [
+      { txt: "Asegurarme de que solo los ocupantes delanteros esten anclados, dejando a discrecion la parte trasera", correcta: false },
+      { txt: "Exigir con firmeza que absolutamente todos los pasajeros se abrochen el cinturon de seguridad, dando el ejemplo yo mismo", correcta: true },
+      { txt: "Pedirles a los pasajeros que moderen el volumen de sus voces para no afectar mi concentracion", correcta: false },
+      { txt: "Validar que cada uno tenga a mano sus documentos de afiliacion al sistema de salud", correcta: false }
+    ],
+    explicacion: "Responsabilidad del conductor: usar SIEMPRE el cinturon y EXIGIR su uso a los pasajeros, sin excepcion. Conducir es mas que manejar, es cuidar tu vida y la de los demas."
+  },
+  {
+    id: 9, key: "reporte-hueco", componente: "Reporte de Riesgo Vial", categoria: "conductor",
+    titulo: "NOTIFICAR HUECO EN VIA",
+    pos: { left: 42, top: 84 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="15" y2="10"/></svg>',
+    pregunta: "Durante un recorrido laboral notas un hueco profundo en el asfalto que casi desestabiliza tu vehiculo. Aunque no hubo choque, ¿que accion proactiva debes tomar de inmediato?",
+    opciones: [
+      { txt: "Ignorar el suceso, asumiendo que el arreglo de las calles es un asunto exclusivo de la alcaldia local", correcta: false },
+      { txt: "Detener el vehiculo y colocar rocas u objetos alrededor del hueco para alertar a otros conductores", correcta: false },
+      { txt: "Notificar al responsable de Seguridad y Salud en el Trabajo (SST) mediante el formulario en linea sobre la anomalia vial", correcta: true },
+      { txt: "Comentar el incidente en redes sociales o grupos informales para que los amigos tengan cuidado", correcta: false }
+    ],
+    explicacion: "Reportar al profesional SST cualquier situacion de riesgo vial mediante el formulario en linea (https://forms.office.com/r/2Us93P21r7) es responsabilidad del actor vial."
+  },
+
+  // ============== EMERGENCIA (5 preguntas - rojo) ==============
+  {
+    id: 10, key: "pas-proteger", componente: "PAS · Proteger", categoria: "emergencia",
+    titulo: "PROTOCOLO PAS · PROTEGER",
     pos: { left: 88.5, top: 70 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
-    pregunta: "Si el vehiculo queda varado en una via abierta, ¿a que distancia se deben ubicar los triangulos reflectivos? (paso PROTEGER del protocolo PAS)",
+    pregunta: "Presencias un accidente de transito en tu ruta. Eres el primero en detenerte. Siguiendo la regla de emergencia PAS, ¿cual es tu accion inicial enfocada en \"Proteger\"?",
     opciones: [
-      { txt: "10 metros adelante y 10 metros atras", correcta: false },
-      { txt: "30 metros adelante y 30 metros atras del vehiculo", correcta: true },
-      { txt: "Solo es necesario uno detras del vehiculo", correcta: false },
-      { txt: "100 metros en linea recta detras del vehiculo", correcta: false }
+      { txt: "Bajarme inmediatamente y correr a sacar a los heridos del vehiculo accidentado", correcta: false },
+      { txt: "Llamar al 123 mientras conduzco alejandome lentamente para no estorbar", correcta: false },
+      { txt: "Asegurar la zona encendiendo mis luces de emergencia y colocando los triangulos de señalizacion a minimo 30 metros", correcta: true },
+      { txt: "Comenzar a grabar con el celular para tener un registro grafico del accidente para la empresa", correcta: false }
     ],
-    explicacion: "Protocolo PAS - paso 1 PROTEGER: triangulos a MINIMO 30 m adelante y 30 m atras. En curva, ubicarlos ANTES de la curva para alertar a tiempo."
+    explicacion: "PAS - paso 1 PROTEGER: asegurar la zona del accidente, encender luces de emergencia, colocar triangulos a MINIMO 30 metros y evitar riesgos adicionales."
   },
   {
-    id: 10, key: "linea123", componente: "Linea Unica 123", categoria: "emergencia",
+    id: 11, key: "pas-avisar", componente: "PAS · Avisar 123", categoria: "emergencia",
     titulo: "PROTOCOLO PAS · AVISAR",
     pos: { left: 90, top: 48 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
-    pregunta: "Ocurre un accidente de transito en la via. Despues de PROTEGER la zona, ¿que numero debes llamar de inmediato? (paso AVISAR del protocolo PAS)",
+    pregunta: "Despues de proteger el lugar del accidente, debes proceder con el paso \"Avisar\". ¿Que informacion fundamental debes transmitir a la Linea Unica de Emergencias (123)?",
     opciones: [
-      { txt: "119 - Bomberos", correcta: false },
-      { txt: "123 - Linea Unica de Emergencias", correcta: true },
-      { txt: "132 - Cruz Roja", correcta: false },
-      { txt: "#767 - Policia de Carreteras", correcta: false }
+      { txt: "Mi nombre completo, cargo y la empresa para la que trabajo, para que me identifiquen", correcta: false },
+      { txt: "La ubicacion exacta del incidente y una descripcion preliminar de la gravedad y cantidad de heridos", correcta: true },
+      { txt: "Los numeros de placa de los carros involucrados para que las autoridades busquen a los dueños", correcta: false },
+      { txt: "Un relato cronologico de quien tuvo la culpa segun mi perspectiva visual", correcta: false }
     ],
-    explicacion: "Protocolo PAS paso 2 AVISAR: marcar 123 (Linea Unica de Emergencias), informar ubicacion exacta y gravedad, solicitar ambulancia y Policia de Transito. Lineas adicionales: 119 Bomberos, 132 Cruz Roja, #767 Policia de Carreteras."
+    explicacion: "PAS - paso 2 AVISAR: llamar al 123 (Linea Unica de Emergencias), informar ubicacion exacta, gravedad y heridos. Solicitar ambulancia y Policia de Transito."
+  },
+  {
+    id: 12, key: "pas-socorrer", componente: "PAS · Socorrer", categoria: "emergencia",
+    titulo: "PROTOCOLO PAS · SOCORRER",
+    pos: { left: 96, top: 60 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+    pregunta: "Al llegar al paso \"Socorrer\", notas que un conductor esta inconsciente dentro de un vehiculo severamente dañado, pero que no presenta riesgo de incendio. ¿Como actuas?",
+    opciones: [
+      { txt: "Sacarlo lo mas rapido posible del auto y acostarlo en una zona verde para que reciba aire", correcta: false },
+      { txt: "No mover a la victima, brindarle acompañamiento verbal, calmar a quienes esten conscientes y esperar ayuda profesional", correcta: true },
+      { txt: "Darle a beber agua o suministrarle analgesicos para que recupere la fuerza y el conocimiento", correcta: false },
+      { txt: "Sacudirle fuertemente los hombros y el pecho para intentar despertarlo del desmayo", correcta: false }
+    ],
+    explicacion: "PAS - paso 3 SOCORRER: NO mover a los heridos graves (riesgo de lesiones cervicales). Calmar a las victimas, dar primeros auxilios si estas capacitado, y permanecer hasta que llegue ayuda."
+  },
+  {
+    id: 13, key: "kit-carreteras", componente: "Kit de Carreteras", categoria: "emergencia",
+    titulo: "EQUIPO OBLIGATORIO",
+    pos: { left: 81, top: 80 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
+    pregunta: "Al revisar tu Kit de Carreteras obligatorio, ¿que conjunto de elementos confirma que estas preparado para prevenir incidentes y asegurar el area del vehiculo?",
+    opciones: [
+      { txt: "Señales de triangulo, extintor vigente, chaleco reflectivo y linterna con pilas funcionales", correcta: true },
+      { txt: "Botellas de agua potable, alimentos no perecederos y una manta termica de emergencia", correcta: false },
+      { txt: "Rollo de cinta adhesiva de ducto, navaja multiusos y un silbato de supervivencia", correcta: false },
+      { txt: "Frascos de gel antibacterial, rollos de papel higienico y paquetes de toallas humedas", correcta: false }
+    ],
+    explicacion: "Kit de Carreteras (obligatorio): triangulos reflectivos, extintor ABC, chaleco reflectivo, linterna, gato, llave de ruedas, cables pasacorriente, herramientas basicas y manual."
+  },
+  {
+    id: 14, key: "kit-emergencias", componente: "Kit de Emergencias", categoria: "emergencia",
+    titulo: "SUPERVIVENCIA EN CARRETERA",
+    pos: { left: 96, top: 80 },
+    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>',
+    pregunta: "El documento sugiere acompañar el equipo vehicular con un \"Kit de Emergencias\" para supervivencia. Si quedas bloqueado en carretera por un derrumbe prolongado, ¿que elementos del kit seran tu prioridad vital?",
+    opciones: [
+      { txt: "Un gato hidraulico industrial y una cruceta de mayor tamaño", correcta: false },
+      { txt: "Cables de alta capacidad para pasar corriente electrica entre baterias", correcta: false },
+      { txt: "Agua potable (minimo 2 litros por persona), alimentos no perecederos y mantas termicas", correcta: true },
+      { txt: "Una copia plastificada del manual de instrucciones del automovil", correcta: false }
+    ],
+    explicacion: "Kit de Emergencias: agua potable (2L/persona), alimentos no perecederos, botiquin completo, linterna, mantas termicas, silbato, radio portatil. Prioridad: hidratacion + alimentacion + abrigo."
   },
 
-  // ============== ZONA-A: PEATON ==============
+  // ============== OTROS ACTORES VIALES (1 pregunta - morado) ==============
   {
-    id: 11, key: "paso-peatonal", componente: "Paso Peatonal", categoria: "peaton",
-    titulo: "DONDE CRUZAR LA VIA",
-    pos: { left: 22, top: 85 },
-    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M6 22V8"/><path d="M18 22V8"/><line x1="6" y1="22" x2="18" y2="22"/><line x1="6" y1="14" x2="18" y2="14"/><line x1="6" y1="18" x2="18" y2="18"/></svg>',
-    pregunta: "Como peaton en actividades laborales, ¿cual es la forma correcta de cruzar la via?",
-    opciones: [
-      { txt: "Cruzar por donde sea mas corto, entre vehiculos estacionados", correcta: false },
-      { txt: "Siempre por los pasos peatonales demarcados y respetando los semaforos", correcta: true },
-      { txt: "Solo es necesario mirar a un lado antes de cruzar", correcta: false },
-      { txt: "Correr para cruzar mas rapido", correcta: false }
-    ],
-    explicacion: "El Peaton Seguro: cruzar SIEMPRE por las zonas demarcadas, respetar semaforos. NUNCA cruzar entre vehiculos estacionados, ya que reduce la visibilidad del conductor."
-  },
-  {
-    id: 12, key: "celular-peaton", componente: "Distraccion del Peaton", categoria: "peaton",
-    titulo: "ATENCION PLENA AL CRUZAR",
-    pos: { left: 20, top: 62 },
-    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/><line x1="3" y1="3" x2="21" y2="21"/></svg>',
-    pregunta: "Como peaton, antes de cruzar la via, debes:",
-    opciones: [
-      { txt: "Caminar mirando el celular o con audifonos puestos", correcta: false },
-      { txt: "Asumir que los conductores siempre te cederan el paso", correcta: false },
-      { txt: "Evitar distracciones (celular, audifonos), hacer contacto visual con los conductores y mirar a ambos lados", correcta: true },
-      { txt: "Cruzar de espaldas a los vehiculos", correcta: false }
-    ],
-    explicacion: "El Peaton Seguro: nada de celular ni audifonos al cruzar la via ni en transporte publico. Contacto visual con los conductores. La atencion plena salva vidas."
-  },
-
-  // ============== ZONA EXTRA: OTROS ACTORES VIALES ==============
-  {
-    id: 13, key: "medios-prohibidos", componente: "Medios Prohibidos", categoria: "otros",
+    id: 15, key: "medios-prohibidos", componente: "Medios Prohibidos", categoria: "otros",
     titulo: "VEHICULOS NO AUTORIZADOS",
     pos: { left: 91.8, top: 25 },
     icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/></svg>',
-    pregunta: "Segun la politica de PAR Servicios, ¿que medios de transporte estan PROHIBIDOS para actividades laborales y desplazamientos en representacion de la empresa?",
+    pregunta: "Tienes que desplazarte urgentemente a otra sede de la empresa por un imprevisto. Para llegar rapido, piensas en usar una patineta electrica o pedir una moto por aplicacion. ¿Que te dictan las politicas del PESV?",
     opciones: [
-      { txt: "Solo motocicletas", correcta: false },
-      { txt: "Bicicletas, patinetas (electricas o mecanicas) y motocicletas", correcta: true },
-      { txt: "Solo bicicletas y patinetas", correcta: false },
-      { txt: "Ninguno esta prohibido si el colaborador firma un descargo", correcta: false }
+      { txt: "Usar la moto por aplicacion solo si le pido al conductor que transite a baja velocidad", correcta: false },
+      { txt: "Llevar la patineta electrica asegurandome de ponerme el casco y las rodilleras", correcta: false },
+      { txt: "Usar mi bicicleta personal ya que es una opcion ecologica y rapida para evitar el trafico", correcta: false },
+      { txt: "Descartar esas opciones y buscar un medio distinto como transporte publico o un vehiculo de cuatro ruedas autorizado", correcta: true }
     ],
-    explicacion: "Politica PAR: queda estrictamente PROHIBIDO usar bicicletas, patinetas electricas o mecanicas y motocicletas para actividades laborales. Tambien prohibido el uso de aplicaciones de transporte con esos vehiculos. Su incumplimiento puede acarrear sanciones disciplinarias."
+    explicacion: "Politica PAR: bicicletas, patinetas (electricas o mecanicas) y motocicletas estan PROHIBIDAS para actividades laborales. Tambien aplica para aplicaciones de transporte con esos vehiculos."
   }
 ];
 
@@ -2361,11 +2449,21 @@ function renderHotspots() {
       '<span class="hs-tooltip">' + escapeHtml(p.componente) + '</span>';
 
     // Listener robusto - addEventListener mejor que onclick
+    // En mobile, manejar touchend en lugar de click para prevenir ghost click
+    let hsHandled = false;
     hs.addEventListener("click", function(ev) {
       ev.preventDefault();
       ev.stopPropagation();
+      if (hsHandled) { hsHandled = false; return; }
       abrirPregunta(p);
     });
+    hs.addEventListener("touchend", function(ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      hsHandled = true;
+      setTimeout(() => { hsHandled = false; }, 700);
+      abrirPregunta(p);
+    }, { passive: false });
 
     if (STATE.player.puntosCompletados.includes(p.key)) {
       hs.classList.add("done");
@@ -2412,7 +2510,7 @@ function actualizarStatsJuego() {
   if (completados >= PUNTOS_CRITICOS.length) {
     btnFin.disabled = false;
     btnFin.classList.add("anim-blink");
-    hintFin.textContent = "Has completado los 13 puntos - finaliza para guardar tu marca";
+    hintFin.textContent = "Has completado las 15 preguntas - finaliza para guardar tu marca";
   }
 
   // Actualizar progreso al server cada cierto tiempo (cada 5s aprox)
@@ -2440,6 +2538,7 @@ function abrirPregunta(punto) {
   playSound("click");
   STATE.preguntaActual = punto;
   STATE.tiempoPreguntaInicio = Date.now();
+  STATE.modalAbiertoEn = Date.now();
 
   document.getElementById("modal-icon").innerHTML = punto.icon;
   document.getElementById("modal-tag").textContent = "Punto " + punto.id + " de " + PUNTOS_CRITICOS.length;
@@ -2469,7 +2568,14 @@ function abrirPregunta(punto) {
 function cerrarModal() {
   document.getElementById("modal-question").classList.add("hidden");
   document.getElementById("modal-question").classList.remove("flex");
+  const habiaPregunta = STATE.preguntaActual !== null;
   STATE.preguntaActual = null;
+  STATE.modalAbiertoEn = 0;
+
+  // Si la respuesta dejo al jugador sin vidas, finalizar
+  if (habiaPregunta && STATE.juegoIniciado && !STATE.player.finalizado && STATE.player.vidas <= 0) {
+    finalizarJuego(true);
+  }
 }
 
 async function responderPregunta(idx) {
@@ -2503,10 +2609,13 @@ async function responderPregunta(idx) {
             <polyline points="20 6 9 17 4 12"/>
           </svg>
         </div>
-        <div>
+        <div class="flex-grow">
           <div class="font-bold text-emerald-400 mb-1 uppercase tracking-wider text-xs">Respuesta Correcta</div>
           <div class="text-slate-300 text-xs leading-relaxed">${escapeHtml(punto.explicacion)}</div>
         </div>
+      </div>
+      <div class="flex justify-end mt-3">
+        <button onclick="cerrarModal()" class="btn-primary text-xs" style="padding: 6px 14px;">Continuar →</button>
       </div>
     `;
     fb.style.background = "rgba(16, 185, 129, 0.08)";
@@ -2524,10 +2633,13 @@ async function responderPregunta(idx) {
             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </div>
-        <div>
+        <div class="flex-grow">
           <div class="font-bold text-red-400 mb-1 uppercase tracking-wider text-xs">Respuesta Incorrecta · +10s</div>
           <div class="text-slate-300 text-xs leading-relaxed">${escapeHtml(punto.explicacion)}</div>
         </div>
+      </div>
+      <div class="flex justify-end mt-3">
+        <button onclick="cerrarModal()" class="btn-primary text-xs" style="padding: 6px 14px;">Continuar →</button>
       </div>
     `;
     fb.style.background = "rgba(239, 68, 68, 0.08)";
@@ -2561,15 +2673,12 @@ async function responderPregunta(idx) {
   // Actualizar stats
   actualizarStatsJuego();
 
-  // Auto-cierre del modal
+  // Auto-cierre del modal como fallback si el usuario no toca "Continuar"
   setTimeout(() => {
-    cerrarModal();
-
-    // Verificar si quedo sin vidas
-    if (STATE.player.vidas <= 0) {
-      finalizarJuego(true);
+    if (STATE.preguntaActual && STATE.preguntaActual.key === punto.key) {
+      cerrarModal();
     }
-  }, 3500);
+  }, 8000);
 }
 
 
@@ -2590,7 +2699,7 @@ async function finalizarJuego(descalificado = false) {
 
   // Renderizar resultados
   const aciertos = STATE.player.puntaje;
-  const aprobado = !descalificado && aciertos >= 9;
+  const aprobado = !descalificado && aciertos >= 11;
   const totalConPen = tiempoFinal + STATE.player.penalizaciones;
 
   document.getElementById("result-score").textContent = aciertos + "/" + PUNTOS_CRITICOS.length;
@@ -2801,7 +2910,7 @@ function reiniciarJuego() {
   document.getElementById("header-stats").classList.remove("flex");
   document.getElementById("btn-finalizar").disabled = true;
   document.getElementById("btn-finalizar").classList.remove("anim-blink");
-  document.getElementById("btn-finalizar-hint").textContent = "Completa los 13 puntos para finalizar";
+  document.getElementById("btn-finalizar-hint").textContent = "Completa los 15 puntos para finalizar";
   mostrarPantalla("screen-access");
 }
 
@@ -2821,10 +2930,22 @@ window.addEventListener("DOMContentLoaded", () => {
     if (e.key === "Escape") cerrarModal();
   });
 
-  // Modal: cerrar al click en backdrop (excepto en contenido)
+  // Modal: cerrar al click en backdrop SOLO si lleva mas de 600ms abierto (anti ghost-click en mobile)
   document.getElementById("modal-question").addEventListener("click", e => {
-    if (e.target.id === "modal-question") cerrarModal();
+    if (e.target.id !== "modal-question") return;
+    if (!STATE.modalAbiertoEn || (Date.now() - STATE.modalAbiertoEn) < 600) return;
+    cerrarModal();
   });
+  // Bloquear touchstart sobre el backdrop para evitar que el touch del hotspot
+  // "filtre" al modal recien aparecido en mobile
+  document.getElementById("modal-question").addEventListener("touchstart", e => {
+    if (e.target.id === "modal-question") {
+      if (!STATE.modalAbiertoEn || (Date.now() - STATE.modalAbiertoEn) < 600) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }
+  }, { passive: false });
 
   // Inicializar audio al primer click
   document.addEventListener("click", function once() {
